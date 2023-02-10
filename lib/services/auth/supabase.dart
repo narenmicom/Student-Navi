@@ -1,15 +1,17 @@
 import 'dart:developer' show log;
 
+import 'package:code/constants/database.dart';
+import 'package:code/services/auth/auth_provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class SupabaseAuthProvider {
+class SupabaseAuthProvider extends AuthProvider {
   final List<NameList> nameList = [];
 
+  @override
   Future<void> initialize() async {
     await Supabase.initialize(
-      url: 'https://zfkofzdawctajysziehp.supabase.co',
-      anonKey:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpma29memRhd2N0YWp5c3ppZWhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzU4NDYxNjQsImV4cCI6MTk5MTQyMjE2NH0.I_GbARbLFM4HU4AuzicpbWD8i4bCsAdvxxwL5kurKPM',
+      url: url,
+      anonKey: anonKey,
     );
   }
 

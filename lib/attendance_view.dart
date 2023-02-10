@@ -1,5 +1,3 @@
-import 'dart:developer' show log;
-
 import 'package:code/services/auth/supabase.dart';
 import 'package:flutter/material.dart';
 
@@ -56,15 +54,16 @@ class _AttendanceViewState extends State<AttendanceView> {
             return ListView.separated(
               itemCount: snapshot.data.length,
               itemBuilder: (context, index) {
-                return ListTile(
+                return CheckboxListTile(
                   title: Text(snapshot.data[index].name),
-                  trailing: Checkbox(
-                    value: isChecked,
-                    onChanged: (newBool) {
-                      isChecked = newBool;
-                    },
-                  ),
                   subtitle: Text(snapshot.data[index].rollNo.toString()),
+                  value: isChecked,
+                  onChanged: (e) {
+                    setState(() {
+                      isChecked = e;
+                    });
+                  },
+                  controlAffinity: ListTileControlAffinity.trailing,
                 );
               },
               separatorBuilder: (BuildContext context, int index) {
