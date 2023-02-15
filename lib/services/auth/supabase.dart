@@ -36,15 +36,18 @@ class SupabaseAuthProvider extends AuthProvider {
 class NameList {
   final String name;
   final int rollNo;
+  bool? value;
 
   NameList({
     required this.rollNo,
     required this.name,
+    this.value = false,
   });
 
   factory NameList.fromJson(Map<String, dynamic> data) {
     final rollNo = data['roll_no'] as int;
     final name = data['name'] as String;
-    return NameList(rollNo: rollNo, name: name);
+    final value = data['value'] ?? false;
+    return NameList(rollNo: rollNo, name: name, value: value);
   }
 }
