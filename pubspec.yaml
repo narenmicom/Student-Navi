@@ -37,6 +37,7 @@ dependencies:
   supabase_flutter: ^1.4.0
   bloc: ^8.1.1
   flutter_bloc: ^8.1.2
+  intl: ^0.18.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

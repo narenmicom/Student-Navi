@@ -1,9 +1,11 @@
-// ignore_for_file: prefer_typing_uninitialized_variables
-
-import 'dart:developer' show log;
-
+import 'dart:convert';
+import 'dart:math';
 import 'package:code/services/auth/supabase.dart';
+import 'package:code/utilities/generic.dart';
+import 'package:code/views/attendance_report_view.dart';
 import 'package:flutter/material.dart';
+
+List<String> subjectList = ["IOT-2019", "MLT-2019"];
 
 class AttendanceView extends StatefulWidget {
   const AttendanceView({super.key});
@@ -15,6 +17,8 @@ class AttendanceView extends StatefulWidget {
 class _AttendanceViewState extends State<AttendanceView> {
   late final SupabaseAuthProvider _nameListService;
   var _data;
+
+  String dropdownValue = subjectList.first;
 
   @override
   void initState() {
@@ -32,7 +36,7 @@ class _AttendanceViewState extends State<AttendanceView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("IOT"),
+        title: const Text("Attendance Marker"),
         actions: [
           PopupMenuButton<MenuAction>(
             onSelected: (value) async {
@@ -56,26 +60,27 @@ class _AttendanceViewState extends State<AttendanceView> {
         future: _data,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
-            return ListView.separated(
-              itemCount: snapshot.data.length,
-              itemBuilder: (context, index) {
-                // return buildSingleCheckbox();
-                return CheckboxListTile(
-                  title: Text(snapshot.data[index].name),
-                  subtitle: Text(snapshot.data[index].rollNo.toString()),
-                  value: snapshot.data[index].value,
-                  onChanged: (bool? e) {
-                    setState(() {
-                      snapshot.data[index].value = e;
-                    });
-                  },
-                  controlAffinity: ListTileControlAffinity.trailing,
-                  activeColor: Colors.green,
-                );
-              },
-              separatorBuilder: (BuildContext context, int index) {
-                return const Divider();
-              },
+            return SizedBox(
+              child: ListView.separated(
+                itemCount: snapshot.data.length,
+                itemBuilder: (context, index) {
+                  return CheckboxListTile(
+                    title: Text(snapshot.data[index].name),
+                    subtitle: Text(snapshot.data[index].rollNo.toString()),
+                    value: snapshot.data[index].value,
+                    onChanged: (bool? e) {
+                      setState(() {
+                        snapshot.data[index].value = e;
+                      });
+                    },
+                    controlAffinity: ListTileControlAffinity.trailing,
+                    activeColor: Colors.green,
+                  );
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  return const Divider();
+                },
+              ),
             );
           } else {
             return const Center(child: CircularProgressIndicator());
@@ -84,17 +89,19 @@ class _AttendanceViewState extends State<AttendanceView> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          final test = await _data;
-          for (var item in test) {
-            log('${item.name},${item.value}');
-          }
+          final takenAttendance = _nameListService.nameList;
+          _nameListService.insertAttendanceRecord(takenAttendance);
         },
         child: const Icon(Icons.save),
       ),
     );
   }
+}
 
-  // Widget buildSingleCheckbox() => CheckboxListTile(
+enum MenuAction { logout, about }
+
+
+// Widget buildSingleCheckbox() => CheckboxListTile(
   //       title: Text('snapshot.data[index].name'),
   //       subtitle: Text('snapshot.data[index].rollNo.toString()'),
   //       value: isChecked,
@@ -106,6 +113,55 @@ class _AttendanceViewState extends State<AttendanceView> {
   //       controlAffinity: ListTileControlAffinity.trailing,
   //       activeColor: Colors.green,
   //     );
-}
 
-enum MenuAction { logout, about }
+  
+
+  // FutureBuilder(
+  //       future: _data,
+  //       builder: (BuildContext context, AsyncSnapshot snapshot) {
+  //         if (snapshot.hasData) {
+  //           return ListView.separated(
+  //             itemCount: snapshot.data.length,
+  //             itemBuilder: (context, index) {
+  //               // return buildSingleCheckbox();
+  //               return CheckboxListTile(
+  //                 title: Text(snapshot.data[index].name),
+  //                 subtitle: Text(snapshot.data[index].rollNo.toString()),
+  //                 value: snapshot.data[index].value,
+  //                 onChanged: (bool? e) {
+  //                   setState(() {
+  //                     snapshot.data[index].value = e;
+  //                   });
+  //                 },
+  //                 controlAffinity: ListTileControlAffinity.trailing,
+  //                 activeColor: Colors.green,
+  //               );
+  //             },
+  //             separatorBuilder: (BuildContext context, int index) {
+  //               return const Divider();
+  //             },
+  //           );
+  //         } else {
+  //           return const Center(child: CircularProgressIndicator());
+  //         }
+  //       },
+  //     )
+
+
+
+  // DropdownButton<String>(
+  //       alignment: Alignment.topCenter,
+  //       value: dropdownValue,
+  //       icon: const Icon(Icons.keyboard_arrow_down),
+  //       items: subjectList.map<DropdownMenuItem<String>>((String value) {
+  //         return DropdownMenuItem<String>(
+  //           value: value,
+  //           child: Text(value),
+  //         );
+  //       }).toList(),
+  //       onChanged: (String? value) {
+  //         setState(() {
+  //           dropdownValue = value!;
+  //         });
+  //       },
+  //     )
