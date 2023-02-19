@@ -1,8 +1,5 @@
 import 'dart:convert';
-import 'dart:math';
 import 'package:code/services/auth/supabase.dart';
-import 'package:code/utilities/generic.dart';
-import 'package:code/views/attendance_report_view.dart';
 import 'package:flutter/material.dart';
 
 List<String> subjectList = ["IOT-2019", "MLT-2019"];
@@ -27,6 +24,12 @@ class _AttendanceViewState extends State<AttendanceView> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    _nameListService.dispose();
+    super.dispose();
+  }
+
   void initialize() async {
     _nameListService = SupabaseAuthProvider();
     await _nameListService.initialize();
@@ -42,6 +45,9 @@ class _AttendanceViewState extends State<AttendanceView> {
             onSelected: (value) async {
               switch (value) {
                 case MenuAction.logout:
+                  _nameListService.logOut();
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                      '/loginRoute/', (route) => false);
                   break;
                 case MenuAction.about:
                   break;

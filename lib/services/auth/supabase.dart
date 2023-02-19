@@ -1,11 +1,9 @@
 import 'dart:convert';
 import 'dart:developer' show log;
-
 import 'package:code/constants/database.dart';
 import 'package:code/services/auth/auth_provider.dart';
+import 'package:code/utilities/data_classes.dart';
 import 'package:code/utilities/generic.dart';
-import 'package:code/views/attendance_view.dart';
-import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseAuthProvider extends AuthProvider {
@@ -19,6 +17,12 @@ class SupabaseAuthProvider extends AuthProvider {
     );
   }
 
+  User? getCurrentuser() {
+    final supabase = Supabase.instance.client;
+    final User? user = supabase.auth.currentUser;
+    return user;
+  }
+
   Future<List<NameList>> allNameList() async {
     final supabase = Supabase.instance.client;
     final data = await supabase.from('student_name').select('*');
@@ -30,8 +34,8 @@ class SupabaseAuthProvider extends AuthProvider {
   }
 
   void insertAttendanceRecord(takenAttendance) async {
-    final supabase = Supabase.instance.client;
     try {
+      final supabase = Supabase.instance.client;
       List list = [];
       for (var item in takenAttendance) {
         TakenAttendanceFormat jsonTest =
@@ -68,47 +72,48 @@ class SupabaseAuthProvider extends AuthProvider {
   SupabaseAuthProvider._sharedInstance();
 
   factory SupabaseAuthProvider() => _shared;
-}
 
-class NameList {
-  final String name;
-  final int rollNo;
-  bool? value;
-
-  NameList({
-    required this.rollNo,
-    required this.name,
-    this.value = false,
-  });
-
-  factory NameList.fromJson(Map<String, dynamic> data) {
-    final rollNo = data['roll_no'] as int;
-    final name = data['name'] as String;
-    final value = data['value'] ?? false;
-    return NameList(rollNo: rollNo, name: name, value: value);
+  @override
+  Future<User> createUser({
+    required String email,
+    required String password,
+  }) async {
+    final supabase = Supabase.instance.client;
+    final AuthResponse res = await supabase.auth.signUp(
+      email: email,
+      password: password,
+    );
+    final User? user = res.user;
+    return user!;
   }
-}
 
-class AttendanceBook {
-  final String date;
-  final List presentAbsent;
-
-  AttendanceBook({required this.date, required this.presentAbsent});
-
-  factory AttendanceBook.fromJson(Map<String, dynamic> data) {
-    final date = data['date'] as String;
-    final presentAbsent = data['present/absent'] as List;
-    return AttendanceBook(date: date, presentAbsent: presentAbsent);
+  @override
+  Future<User> logIn({
+    required String email,
+    required String password,
+  }) async {
+    final supabase = Supabase.instance.client;
+    final AuthResponse res = await supabase.auth.signInWithPassword(
+      email: email,
+      password: password,
+    );
+    final User? user = res.user;
+    return user!;
   }
-}
 
-class TakenAttendanceFormat {
-  int rollNo;
-  bool value;
+  @override
+  Future<void> logOut() async {
+    final supabase = Supabase.instance.client;
+    await supabase.auth.signOut();
+  }
 
-  TakenAttendanceFormat(this.rollNo, this.value);
+  @override
+  Future<void> sendPasswordReset({required String email}) async {
+    final supabase = Supabase.instance.client;
+    await supabase.auth.resetPasswordForEmail(email);
+  }
 
-  Map toJson() {
-    return {"$rollNo": value ? "Present" : "Absent"};
+  void dispose() {
+    nameList.clear();
   }
 }

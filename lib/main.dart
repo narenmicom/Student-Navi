@@ -1,6 +1,12 @@
-import 'package:code/views/attendance_report_view.dart';
+import 'dart:developer';
+
 import 'package:code/views/attendance_view.dart';
+import 'package:code/views/login_view.dart';
+import 'package:code/views/register_view.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+import 'services/auth/supabase.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,41 +20,42 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(brightness: Brightness.dark),
-      home: const HomePage(),
+      home: const Homepage(),
       routes: {
         '/attendanceRoute/': (context) => const AttendanceView(),
+        '/registerRoute/': (context) => const RegisterView(),
+        '/loginRoute/': (context) => const LoginView(),
       },
     );
   }
 }
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class Homepage extends StatefulWidget {
+  const Homepage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<Homepage> createState() => _HomepageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomepageState extends State<Homepage> {
+  late final SupabaseAuthProvider _checkup;
+  late final User? _currentUser;
+
+  @override
+  void initState() {
+    initialize();
+    super.initState();
+  }
+
+  void initialize() async {
+    _checkup = SupabaseAuthProvider();
+    await _checkup.initialize();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Home Page"),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed('/attendanceRoute/');
-              },
-              child: const Text("Take Attendance"),
-            )
-          ],
-        ),
-      ),
-    );
+    _currentUser = _checkup.getCurrentuser();
+    log(_currentUser.toString());
+    return LoginView();
   }
 }

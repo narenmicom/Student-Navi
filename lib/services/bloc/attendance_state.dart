@@ -1,4 +1,5 @@
 import 'package:code/services/auth/supabase.dart';
+import 'package:code/utilities/data_classes.dart';
 import 'package:flutter/foundation.dart';
 
 @immutable
