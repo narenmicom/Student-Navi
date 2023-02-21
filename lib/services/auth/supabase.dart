@@ -1,26 +1,36 @@
 import 'dart:convert';
 import 'dart:developer' show log;
 import 'package:code/constants/database.dart';
-import 'package:code/services/auth/auth_provider.dart';
 import 'package:code/utilities/data_classes.dart';
 import 'package:code/utilities/generic.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class SupabaseAuthProvider extends AuthProvider {
+class SupabaseAuthProvider {
   final List<NameList> nameList = [];
+  final client = SupabaseClient(url, anonKey);
+  static final SupabaseAuthProvider _shared =
+      SupabaseAuthProvider._sharedInstance();
 
-  @override
+  SupabaseAuthProvider._sharedInstance();
+
+  factory SupabaseAuthProvider() => _shared;
+
+  get getCurrentuser => null;
+
   Future<void> initialize() async {
     await Supabase.initialize(
-      url: url,
       anonKey: anonKey,
+      url: url,
     );
   }
 
-  User? getCurrentuser() {
-    final supabase = Supabase.instance.client;
-    final User? user = supabase.auth.currentUser;
-    return user;
+  User? get currentUser {
+    final user = client.auth.currentUser;
+    if (user != null) {
+      return user;
+    } else {
+      return null;
+    }
   }
 
   Future<List<NameList>> allNameList() async {
@@ -66,13 +76,6 @@ class SupabaseAuthProvider extends AuthProvider {
     log(attendanceBookList[0].presentAbsent.toString());
   }
 
-  static final SupabaseAuthProvider _shared =
-      SupabaseAuthProvider._sharedInstance();
-
-  SupabaseAuthProvider._sharedInstance();
-
-  factory SupabaseAuthProvider() => _shared;
-
   @override
   Future<User> createUser({
     required String email,
@@ -92,8 +95,7 @@ class SupabaseAuthProvider extends AuthProvider {
     required String email,
     required String password,
   }) async {
-    final supabase = Supabase.instance.client;
-    final AuthResponse res = await supabase.auth.signInWithPassword(
+    final AuthResponse res = await client.auth.signInWithPassword(
       email: email,
       password: password,
     );
@@ -103,8 +105,7 @@ class SupabaseAuthProvider extends AuthProvider {
 
   @override
   Future<void> logOut() async {
-    final supabase = Supabase.instance.client;
-    await supabase.auth.signOut();
+    await client.auth.signOut();
   }
 
   @override

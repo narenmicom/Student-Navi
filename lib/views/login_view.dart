@@ -1,9 +1,11 @@
 import 'dart:developer';
-import 'package:code/services/auth/supabase.dart';
-import 'package:code/utilities/dialog/generic_dialog.dart';
+import 'package:code/services/auth/auth_exception.dart';
+import 'package:code/services/auth/bloc/auth_bloc.dart';
+import 'package:code/services/auth/bloc/auth_event.dart';
+import 'package:code/services/auth/bloc/auth_state.dart';
+import 'package:code/utilities/dialog/error_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -15,12 +17,10 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   late final TextEditingController _email;
   late final TextEditingController _password;
-  late final SupabaseAuthProvider _login;
   late bool _passwordVisible;
 
   @override
   void initState() {
-    initialize();
     _email = TextEditingController();
     _password = TextEditingController();
     _passwordVisible = false;
@@ -34,113 +34,81 @@ class _LoginViewState extends State<LoginView> {
     super.dispose();
   }
 
-  void initialize() async {
-    _login = SupabaseAuthProvider();
-    await _login.initialize();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            const Text('Please log in to your account in order to inter'),
-            TextField(
-              controller: _email,
-              autocorrect: false,
-              keyboardType: TextInputType.emailAddress,
-              decoration:
-                  const InputDecoration(hintText: "Enter your E-mail here"),
-            ),
-            TextFormField(
-              controller: _password,
-              obscureText: !_passwordVisible,
-              enableSuggestions: false,
-              autocorrect: false,
-              decoration: InputDecoration(
-                hintText: "Enter your Password here",
-                suffixIcon: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      _passwordVisible = !_passwordVisible;
-                    });
-                  },
-                  icon: Icon(_passwordVisible
-                      ? Icons.visibility
-                      : Icons.visibility_off),
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) async {
+        if (state is AuthStateLoggedOut) {
+          if (state.exception is UserNotFoundAuthException) {
+            await showErrorDialog(
+                context, 'Cannot find a user with entered credentials');
+          } else if (state.exception is WrongPasswordAuthException) {
+            await showErrorDialog(context, 'Wrong Credentials');
+          } else if (state.exception is GenericAuthException) {
+            await showErrorDialog(context, "Authentication Error");
+          }
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(title: const Text('Login')),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              const Text('Please log in to your account in order to inter'),
+              TextField(
+                controller: _email,
+                autocorrect: false,
+                keyboardType: TextInputType.emailAddress,
+                decoration:
+                    const InputDecoration(hintText: "Enter your E-mail here"),
+              ),
+              TextFormField(
+                controller: _password,
+                obscureText: !_passwordVisible,
+                enableSuggestions: false,
+                autocorrect: false,
+                decoration: InputDecoration(
+                  hintText: "Enter your Password here",
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _passwordVisible = !_passwordVisible;
+                      });
+                    },
+                    icon: Icon(_passwordVisible
+                        ? Icons.visibility
+                        : Icons.visibility_off),
+                  ),
                 ),
               ),
-            ),
-            TextButton(
-              onPressed: () async {
-                try {
+              TextButton(
+                onPressed: () async {
                   final email = _email.text;
                   final password = _password.text;
-                  await _login.logIn(
-                    email: email,
-                    password: password,
-                  );
-                  LoadingAnimationWidget.staggeredDotsWave(
-                    color: Colors.white,
-                    size: 200,
-                  );
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                      '/attendanceRoute/', (route) => false);
-                } on AuthException catch (e) {
-                  log(e.toString());
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text("Verify Email"),
-                      content: const Text(
-                          "Please check your mail for Account verification"),
-                      actions: <Widget>[
-                        TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(14),
-                              child: const Text("Okay"),
-                            ))
-                      ],
-                    ),
-                  );
-                }
-              },
-              child: const Text("Login"),
-            ),
-            TextButton(
-              onPressed: () async {
-                await _login.sendPasswordReset(email: _email.text);
-                LoadingAnimationWidget.staggeredDotsWave(
-                  color: Colors.white,
-                  size: 200,
-                );
-                // ignore: use_build_context_synchronously
-                showGenericDialog<void>(
-                  context: context,
-                  title: 'Forgot Password',
-                  content:
-                      'An Reset link for password has been send. Please Check your Email',
-                  optionBuilder: () => {
-                    'OK': null,
-                  },
-                );
-              },
-              child: const Text('Forgot Password'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                    '/registerRoute/', (route) => false);
-              },
-              child: const Text('Not Register yet? Register here'),
-            )
-          ],
+                  context.read<AuthBloc>().add(
+                        AuthEventLogIn(
+                          email,
+                          password,
+                        ),
+                      );
+                },
+                child: const Text("Login"),
+              ),
+              TextButton(
+                onPressed: () {},
+                child: const Text('Forgot Password'),
+              ),
+              TextButton(
+                onPressed: () {
+                  context.read<AuthBloc>().add(
+                        const AuthEventShouldRegister(),
+                      );
+                },
+                child: const Text('Not Register yet? Register here'),
+              )
+            ],
+          ),
         ),
       ),
     );

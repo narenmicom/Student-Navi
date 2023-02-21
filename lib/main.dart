@@ -1,11 +1,13 @@
-import 'dart:developer';
-
+import 'package:code/helpers/loading/loading_screen.dart';
+import 'package:code/services/auth/bloc/auth_bloc.dart';
+import 'package:code/services/auth/bloc/auth_event.dart';
+import 'package:code/services/auth/bloc/auth_state.dart';
 import 'package:code/views/attendance_view.dart';
+import 'package:code/views/faculty_hompage.dart';
 import 'package:code/views/login_view.dart';
 import 'package:code/views/register_view.dart';
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'services/auth/supabase.dart';
 
 void main() {
@@ -20,42 +22,80 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(brightness: Brightness.dark),
-      home: const Homepage(),
+      home: BlocProvider<AuthBloc>(
+        create: (context) => AuthBloc(SupabaseAuthProvider()),
+        child: const HomePage(),
+      ),
       routes: {
         '/attendanceRoute/': (context) => const AttendanceView(),
-        '/registerRoute/': (context) => const RegisterView(),
-        '/loginRoute/': (context) => const LoginView(),
       },
     );
   }
 }
 
-class Homepage extends StatefulWidget {
-  const Homepage({super.key});
-
-  @override
-  State<Homepage> createState() => _HomepageState();
-}
-
-class _HomepageState extends State<Homepage> {
-  late final SupabaseAuthProvider _checkup;
-  late final User? _currentUser;
-
-  @override
-  void initState() {
-    initialize();
-    super.initState();
-  }
-
-  void initialize() async {
-    _checkup = SupabaseAuthProvider();
-    await _checkup.initialize();
-  }
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    _currentUser = _checkup.getCurrentuser();
-    log(_currentUser.toString());
-    return LoginView();
+    context.read<AuthBloc>().add(const AuthEventInitialize());
+    return BlocConsumer<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state.isLoading) {
+          LoadingScreen().show(
+            context: context,
+            text: state.loadingText ?? 'Please wait a moment',
+          );
+        } else {
+          LoadingScreen().hide();
+        }
+      },
+      builder: (context, state) {
+        if (state is AuthStateLoggedIn) {
+          return const FacultyHomePage();
+        } else if (state is AuthStateLoggedOut) {
+          return const LoginView();
+        } else if (state is AuthStateRegistering) {
+          return const RegisterView();
+        } else {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+      },
+    );
   }
 }
+
+
+
+
+// class Homepage extends StatefulWidget {
+//   const Homepage({super.key});
+
+//   @override
+//   State<Homepage> createState() => _HomepageState();
+// }
+
+// class _HomepageState extends State<Homepage> {
+//   late final SupabaseAuthProvider _checkup;
+//   late final User? _currentUser;
+
+//   @override
+//   void initState() {
+//     initialize();
+//     super.initState();
+//   }
+
+//   void initialize() async {
+//     _checkup = SupabaseAuthProvider();
+//     await _checkup.initialize();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     _currentUser = _checkup.getCurrentuser();
+//     log(_currentUser.toString());
+//     return LoginView();
+//   }
+// }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:code/services/auth/bloc/auth_event.dart';
 import 'package:code/services/auth/bloc/auth_state.dart';
@@ -39,8 +41,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     //initialize
     on<AuthEventInitialize>(
-      (event, emit) {
-        final user = provider.getCurrentuser();
+      (event, emit) async {
+        final user = await provider.getCurrentuser;
         if (user == null) {
           emit(const AuthStateLoggedOut(
             exception: null,
@@ -61,7 +63,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(const AuthStateLoggedOut(
           exception: null,
           isLoading: true,
-          loadingText: 'Please wait while I log out',
+          loadingText: 'Please wait while I log in',
         ));
         final email = event.email;
         final password = event.password;
