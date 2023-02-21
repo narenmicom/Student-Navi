@@ -12,7 +12,7 @@ class AttendanceView extends StatefulWidget {
 }
 
 class _AttendanceViewState extends State<AttendanceView> {
-  late final SupabaseAuthProvider _nameListService;
+  late final SupabaseAuthProvider _provider;
   var _data;
 
   String dropdownValue = subjectList.first;
@@ -20,19 +20,19 @@ class _AttendanceViewState extends State<AttendanceView> {
   @override
   void initState() {
     initialize();
-    _data = _nameListService.allNameList();
+    _data = _provider.allNameList();
     super.initState();
   }
 
   @override
   void dispose() {
-    _nameListService.dispose();
+    _provider.dispose();
     super.dispose();
   }
 
   void initialize() async {
-    _nameListService = SupabaseAuthProvider();
-    await _nameListService.initialize();
+    _provider = SupabaseAuthProvider();
+    await _provider.initialize();
   }
 
   @override
@@ -45,7 +45,7 @@ class _AttendanceViewState extends State<AttendanceView> {
             onSelected: (value) async {
               switch (value) {
                 case MenuAction.logout:
-                  _nameListService.logOut();
+                  await _provider.logOut();
                   Navigator.of(context).pushNamedAndRemoveUntil(
                       '/loginRoute/', (route) => false);
                   break;
@@ -95,8 +95,8 @@ class _AttendanceViewState extends State<AttendanceView> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          final takenAttendance = _nameListService.nameList;
-          _nameListService.insertAttendanceRecord(takenAttendance);
+          final takenAttendance = _provider.nameList;
+          _provider.insertAttendanceRecord(takenAttendance);
         },
         child: const Icon(Icons.save),
       ),

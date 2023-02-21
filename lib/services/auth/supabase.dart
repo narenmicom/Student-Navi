@@ -7,15 +7,12 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseAuthProvider {
   final List<NameList> nameList = [];
-  final client = SupabaseClient(url, anonKey);
   static final SupabaseAuthProvider _shared =
       SupabaseAuthProvider._sharedInstance();
 
   SupabaseAuthProvider._sharedInstance();
 
   factory SupabaseAuthProvider() => _shared;
-
-  get getCurrentuser => null;
 
   Future<void> initialize() async {
     await Supabase.initialize(
@@ -25,8 +22,10 @@ class SupabaseAuthProvider {
   }
 
   User? get currentUser {
+    final client = Supabase.instance.client;
     final user = client.auth.currentUser;
     if (user != null) {
+      log("Helo");
       return user;
     } else {
       return null;
@@ -95,16 +94,21 @@ class SupabaseAuthProvider {
     required String email,
     required String password,
   }) async {
+    final client = Supabase.instance.client;
     final AuthResponse res = await client.auth.signInWithPassword(
       email: email,
       password: password,
     );
+    final Session? session = res.session;
     final User? user = res.user;
+    log(user.toString());
+    log(session!.accessToken.toString());
     return user!;
   }
 
   @override
   Future<void> logOut() async {
+    final client = Supabase.instance.client;
     await client.auth.signOut();
   }
 
