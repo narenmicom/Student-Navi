@@ -55,7 +55,7 @@ class _LoginViewState extends State<LoginView> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              const Text('Please log in to your account in order to inter'),
+              // const Text('Please log in to your account in order to inter'),
               TextField(
                 controller: _email,
                 autocorrect: false,

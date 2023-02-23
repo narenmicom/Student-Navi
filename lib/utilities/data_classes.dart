@@ -17,6 +17,38 @@ class NameList {
   }
 }
 
+class Subjects {
+  final String subjectId;
+  final String subjectName;
+
+  Subjects({
+    required this.subjectId,
+    required this.subjectName,
+  });
+
+  factory Subjects.fromJson(Map<String, dynamic> data) {
+    final subjectId = data['subject_id'] as String;
+    final subjectName = data['subject_name'] as String;
+    return Subjects(subjectId: subjectId, subjectName: subjectName);
+  }
+}
+
+class Lecture {
+  final String lectureid;
+  final String subjectid;
+
+  Lecture({
+    required this.lectureid,
+    required this.subjectid,
+  });
+
+  factory Lecture.fromJson(Map<String, dynamic> data) {
+    final lectureid = data['lecture_id'] as String;
+    final subjectid = data['subject_id'] as String;
+    return Lecture(lectureid: lectureid, subjectid: subjectid);
+  }
+}
+
 class AttendanceBook {
   final String date;
   final List presentAbsent;
@@ -32,11 +64,12 @@ class AttendanceBook {
 
 class TakenAttendanceFormat {
   int rollNo;
-  bool value;
+  String value;
+  String name;
 
-  TakenAttendanceFormat(this.rollNo, this.value);
+  TakenAttendanceFormat(this.rollNo, this.value, this.name);
 
-  Map toJson() {
-    return {"$rollNo": value ? "Present" : "Absent"};
-  }
+  // Map toJson() {
+  //   return {"$rollNo": (value ? "Present" : "Absent")};
+  // }
 }

@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:code/services/auth/supabase.dart';
+import 'package:code/services/auth/supabaseprovider.dart';
 import 'package:code/services/bloc/attendance_event.dart';
 import 'package:code/services/bloc/attendance_state.dart';
 

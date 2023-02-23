@@ -1,4 +1,4 @@
-import 'package:code/services/auth/supabase.dart';
+import 'package:code/services/auth/supabaseprovider.dart';
 import 'package:flutter/material.dart';
 
 class RegisterView extends StatefulWidget {
@@ -44,7 +44,7 @@ class _RegisterViewState extends State<RegisterView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Enter your email and password to see your notes'),
+            // const Text('Enter your email and password to see your notes'),
             TextField(
               controller: _email,
               autocorrect: false,
