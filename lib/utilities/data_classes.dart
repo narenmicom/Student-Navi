@@ -73,3 +73,15 @@ class TakenAttendanceFormat {
   //   return {"$rollNo": (value ? "Present" : "Absent")};
   // }
 }
+
+class StudentAttendanceData {
+  int presentCount;
+  int totalCount;
+  String subjectId;
+
+  StudentAttendanceData(
+    this.subjectId,
+    this.presentCount,
+    this.totalCount,
+  );
+}
