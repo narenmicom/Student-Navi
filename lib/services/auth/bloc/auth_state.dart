@@ -38,9 +38,11 @@ class AuthStateForgotPassword extends AuthState {
 
 class AuthStateLoggedIn extends AuthState {
   final User user;
+  final String? role;
   const AuthStateLoggedIn({
     required this.user,
     required bool isLoading,
+    this.role,
   }) : super(isLoading: isLoading);
 }
 

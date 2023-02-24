@@ -75,13 +75,18 @@ class TakenAttendanceFormat {
 }
 
 class StudentAttendanceData {
-  int presentCount;
-  int totalCount;
-  String subjectId;
+  // int presentCount;
+  // int totalCount;
+  final String subjectName;
+  final int present;
+  final int total;
 
   StudentAttendanceData(
-    this.subjectId,
-    this.presentCount,
-    this.totalCount,
-  );
+      {required this.subjectName, required this.present, required this.total});
+
+  // factory StudentAttendanceData.fromJson(Map<String, dynamic> data) {
+  //   final subjectName = data['subject_fullname'] as String;
+  //   final present = data['counts'] as int;
+  //   return StudentAttendanceData(subjectName: subjectName, present: present);
+  // }
 }

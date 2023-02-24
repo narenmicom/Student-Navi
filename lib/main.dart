@@ -4,7 +4,6 @@ import 'package:code/services/auth/bloc/auth_event.dart';
 import 'package:code/services/auth/bloc/auth_state.dart';
 import 'package:code/views/Faculty/Attendance/attendance_report_view.dart';
 import 'package:code/views/Faculty/Attendance/attendance_view.dart';
-import 'package:code/views/Faculty/faculty_hompage.dart';
 import 'package:code/views/Student/Attendance/attendance_report.dart';
 import 'package:code/views/login_view.dart';
 import 'package:code/views/register_view.dart';
