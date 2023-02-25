@@ -78,11 +78,16 @@ class StudentAttendanceData {
   // int presentCount;
   // int totalCount;
   final String subjectName;
-  final int present;
-  final int total;
+  // final int present;
+  // final int total;
+  final String percentage;
 
-  StudentAttendanceData(
-      {required this.subjectName, required this.present, required this.total});
+  StudentAttendanceData({
+    required this.subjectName,
+    // required this.present,
+    // required this.total,
+    required this.percentage,
+  });
 
   // factory StudentAttendanceData.fromJson(Map<String, dynamic> data) {
   //   final subjectName = data['subject_fullname'] as String;

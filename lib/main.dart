@@ -4,6 +4,8 @@ import 'package:code/services/auth/bloc/auth_event.dart';
 import 'package:code/services/auth/bloc/auth_state.dart';
 import 'package:code/views/Faculty/Attendance/attendance_report_view.dart';
 import 'package:code/views/Faculty/Attendance/attendance_view.dart';
+import 'package:code/views/Faculty/add_event_view.dart';
+import 'package:code/views/Faculty/faculty_hompage.dart';
 import 'package:code/views/Student/Attendance/attendance_report.dart';
 import 'package:code/views/login_view.dart';
 import 'package:code/views/register_view.dart';
@@ -30,6 +32,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/attendanceRoute/': (context) => const AttendanceView(),
         '/attendanceReportRoute/': (context) => AttendanceReportView(),
+        '/eventsRoute/': (context) => const AddEventsView(),
         '/attendanceViewForStudentsRoute/': (context) =>
             const AttendanceViewForStudent(),
       },
@@ -56,7 +59,7 @@ class HomePage extends StatelessWidget {
       },
       builder: (context, state) {
         if (state is AuthStateLoggedIn) {
-          return const AttendanceViewForStudent();
+          return const AddEventsView();
         } else if (state is AuthStateLoggedOut) {
           return const LoginView();
         } else if (state is AuthStateRegistering) {
