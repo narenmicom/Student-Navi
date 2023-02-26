@@ -74,6 +74,49 @@ class TakenAttendanceFormat {
   // }
 }
 
+class EventsDetails {
+  final String ename;
+  final String description;
+  final String venue;
+  final String? registerLink;
+  final String posterLink;
+  final String startDate;
+  final String endDate;
+  final String organiser;
+
+  EventsDetails({
+    required this.ename,
+    required this.description,
+    required this.venue,
+    this.registerLink,
+    required this.posterLink,
+    required this.startDate,
+    required this.endDate,
+    required this.organiser,
+  });
+
+  factory EventsDetails.fromJson(Map<String, dynamic> data) {
+    final ename = data['ename'] as String;
+    final description = data['description'] as String;
+    final venue = data['venue'] as String;
+    final registerLink = data!['register_link'] as String;
+    final posterLink = data['poster_link'] as String;
+    final startDate = data['start_date'] as String;
+    final endDate = data['end_date'] as String;
+    final organiser = data['organiser'] as String;
+    return EventsDetails(
+      ename: ename,
+      description: description,
+      venue: venue,
+      registerLink: registerLink,
+      posterLink: posterLink,
+      startDate: startDate,
+      endDate: endDate,
+      organiser: organiser,
+    );
+  }
+}
+
 class StudentAttendanceData {
   // int presentCount;
   // int totalCount;
