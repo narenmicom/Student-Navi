@@ -37,8 +37,6 @@ class _AllNotesListViewState extends State<AllNotesListView> {
     // await requestPermission();
   }
 
-  List<Item> _data = generateItems(10);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,7 +80,7 @@ class _AllNotesListViewState extends State<AllNotesListView> {
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(12.0),
         child: ListView.builder(
           itemBuilder: (context, index) {
             return ExpansionTile(
@@ -92,25 +90,32 @@ class _AllNotesListViewState extends State<AllNotesListView> {
               ),
               subtitle: Text("Prof. Arun Prasad"),
               children: [
-                ListTile(
-                  title: Text("Unit 1"),
-                ),
-                Link(
-                  target: LinkTarget.blank,
-                  uri: Uri.parse(
-                    "https://docs.google.com/forms/d/e/1FAIpQLSckZo9TahMYHXhFt54G9CV0ABdT8jaN3rNEt007BiQPTSpoNQ/viewscore?viewscore=AE0zAgD5Nkbvo40JPYNZZ3Y6WKSqRPZOQc5ltzVYTXeKC1YshbWJA5_sRsn_84e3kHpomqE",
-                  ),
-                  builder: (context, followLink) => GestureDetector(
-                    onTap: followLink,
-                    child: const Text(
-                      'Register Link',
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.blue,
-                        decoration: TextDecoration.underline,
+                Column(
+                  children: [
+                    ListView.builder(
+                      itemCount: 5,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      itemBuilder: (context, index) => ListTile(
+                        title: Link(
+                          target: LinkTarget.self,
+                          uri: Uri.parse(
+                            "https://docs.google.com/forms/d/e/1FAIpQLSckZo9TahMYHXhFt54G9CV0ABdT8jaN3rNEt007BiQPTSpoNQ/viewscore?viewscore=AE0zAgD5Nkbvo40JPYNZZ3Y6WKSqRPZOQc5ltzVYTXeKC1YshbWJA5_sRsn_84e3kHpomqE",
+                          ),
+                          builder: (context, followLink) => GestureDetector(
+                            onTap: followLink,
+                            child: const Text(
+                              'Unit 1',
+                              style: TextStyle(
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
+                    )
+                  ],
                 )
               ],
             );
@@ -152,6 +157,24 @@ Widget _notesCard2() {
   );
 }
 
+// Link(
+//                   target: LinkTarget.blank,
+//                   uri: Uri.parse(
+//                     "https://docs.google.com/forms/d/e/1FAIpQLSckZo9TahMYHXhFt54G9CV0ABdT8jaN3rNEt007BiQPTSpoNQ/viewscore?viewscore=AE0zAgD5Nkbvo40JPYNZZ3Y6WKSqRPZOQc5ltzVYTXeKC1YshbWJA5_sRsn_84e3kHpomqE",
+//                   ),
+//                   builder: (context, followLink) => GestureDetector(
+//                     onTap: followLink,
+//                     child: const Text(
+//                       'Register Link',
+//                       style: TextStyle(
+//                         fontSize: 20,
+//                         color: Colors.blue,
+//                         decoration: TextDecoration.underline,
+//                       ),
+//                     ),
+//                   ),
+//                 )
+
 enum MenuAction { logout, about, addNotes }
 
 Widget _notesCard1() => ExpandableNotifier(
@@ -188,56 +211,3 @@ Widget _notesCard1() => ExpandableNotifier(
         ),
       ),
     );
-
-// Widget _notesCard() {
-//   return Container(
-//     padding: const EdgeInsets.all(16),
-//     child: Card(
-//       shape: const RoundedRectangleBorder(
-//         borderRadius: BorderRadius.all(Radius.circular(10)),
-//       ),
-//       child: InkWell(
-//         onTap: () {},
-//         borderRadius: const BorderRadius.all(Radius.circular(20)),
-//         child: Padding(
-//           padding: const EdgeInsets.only(left: 10),
-//           child: SizedBox(
-//             width: 50,
-//             height: 80,
-//             child: Row(
-//               children: [
-//                 Text(
-//                   "Internet of Things",
-//                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-//                 ),
-//                 IconButton(
-//                     onPressed: () {},
-//                     icon: const Icon(Icons.arrow_downward_rounded))
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     ),
-//   );
-// }
-
-class Item {
-  String expandedValue;
-  String headerValue;
-  bool isExpanded;
-
-  Item(
-      {required this.expandedValue,
-      required this.headerValue,
-      this.isExpanded = false});
-}
-
-List<Item> generateItems(int numberOfItems) {
-  return List.generate(numberOfItems, (index) {
-    return Item(
-      expandedValue: "panel $index",
-      headerValue: "This is item number $index",
-    );
-  });
-}

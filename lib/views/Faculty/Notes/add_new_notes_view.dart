@@ -183,10 +183,10 @@ class _AddNewNotesViewState extends State<AddNewNotesView> {
                           if (_formKey.currentState?.saveAndValidate() ??
                               false) {
                             final details = _formKey.currentState?.value;
-                            final res = await _provider.addEvent(details);
-                            // ScaffoldMessenger.of(context)
-                            //     .showSnackBar(SnackBar(content: Text(res)));
-                            // Navigator.of(context).pop();
+                            final res = await _provider.addNotes(details);
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(SnackBar(content: Text(res)));
+                            Navigator.of(context).pop();
                           } else {
                             debugPrint(_formKey.currentState?.value.toString());
                             debugPrint('validation failed');

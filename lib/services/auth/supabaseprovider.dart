@@ -191,9 +191,9 @@ class SupabaseAuthProvider {
           .upload('events/${res + 1}.jpg', avatarFile);
       final imgpath =
           "https://zfkofzdawctajysziehp.supabase.co/storage/v1/object/public/$path";
-      if (details != null) {
+      if (imgpath != null) {
         final res = await Supabase.instance.client.from('events').insert({
-          'ename': details['ename'],
+          'ename': details!['ename'],
           'description': details['description'],
           'venue': details['venue'],
           'register_link': details['register_link'],
@@ -222,10 +222,28 @@ class SupabaseAuthProvider {
     return eventsDetails;
   }
 
-  void addNotes(Map<String, dynamic>? details) async {
-    // details!.forEach((key, value) {
-    //   log("$key: $value");
-    // });
+  Future<String> addNotes(Map<String, dynamic>? details) async {
+    final filename = File(details?['filename'][0].path);
+    try {
+      final String path = await Supabase.instance.client.storage
+          .from('files')
+          .upload('${details!['subjectsname']}-${details!['notesname']}.pdf',
+              filename);
+      final filepath =
+          "https://zfkofzdawctajysziehp.supabase.co/storage/v1/object/public/$path";
+      if (details != null) {
+        final res = await Supabase.instance.client.from('notes').insert({
+          'notesname': details['notesname'],
+          'subject_name': details['subjectsname'],
+          'file_link': filepath,
+        });
+      }
+      return "Submitted";
+    } on PostgrestException catch (e) {
+      return e.toString();
+    } on Exception catch (e) {
+      return e.toString();
+    }
   }
 
   Future<User> createUser({
