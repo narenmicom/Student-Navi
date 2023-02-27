@@ -1,4 +1,4 @@
-# code
+# Student-Navi
 
 A new Flutter project.
 
