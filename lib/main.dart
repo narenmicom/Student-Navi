@@ -7,6 +7,7 @@ import 'package:code/views/Faculty/Attendance/attendance_view.dart';
 import 'package:code/views/Faculty/Events/add_event_view.dart';
 import 'package:code/views/Faculty/Events/all_events_view.dart';
 import 'package:code/views/Faculty/Notes/add_new_notes_view.dart';
+import 'package:code/views/Faculty/Notes/notes_list_view.dart';
 import 'package:code/views/Student/Attendance/attendance_report.dart';
 import 'package:code/views/login_view.dart';
 import 'package:code/views/register_view.dart';
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
         '/attendanceRoute/': (context) => const AttendanceView(),
         '/attendanceReportRoute/': (context) => AttendanceReportView(),
         '/addNewEventsRoute/': (context) => const AddNewEventsView(),
+        '/addNewNotesRoute/': (context) => const AddNewNotesView(),
         '/allEventsRoute/': (context) => const AllEventsView(),
         '/attendanceViewForStudentsRoute/': (context) =>
             const AttendanceViewForStudent(),
@@ -61,7 +63,7 @@ class HomePage extends StatelessWidget {
       },
       builder: (context, state) {
         if (state is AuthStateLoggedIn) {
-          return const AddNewNotesView();
+          return const AllEventsView();
         } else if (state is AuthStateLoggedOut) {
           return const LoginView();
         } else if (state is AuthStateRegistering) {

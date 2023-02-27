@@ -1,0 +1,243 @@
+import 'package:code/services/auth/supabaseprovider.dart';
+import 'package:expandable/expandable.dart';
+import 'package:flutter/material.dart';
+import 'package:expansion_tile_card/expansion_tile_card.dart';
+import 'package:url_launcher/link.dart';
+
+class AllNotesListView extends StatefulWidget {
+  const AllNotesListView({super.key});
+
+  @override
+  State<AllNotesListView> createState() => _AllNotesListViewState();
+}
+
+const text = "Lorem ipsum dolor sit amet.";
+const text1 =
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+
+class _AllNotesListViewState extends State<AllNotesListView> {
+  late final SupabaseAuthProvider _provider;
+
+  @override
+  void initState() {
+    initialize();
+    // requestPermission();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _provider.dispose();
+    super.dispose();
+  }
+
+  void initialize() async {
+    _provider = SupabaseAuthProvider();
+    await _provider.initialize();
+    // await requestPermission();
+  }
+
+  List<Item> _data = generateItems(10);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Notes & Syllabus"),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed(
+                '/addNewNotesRoute/',
+              );
+            },
+            icon: Icon(Icons.add),
+          ),
+          PopupMenuButton<MenuAction>(
+            onSelected: (value) async {
+              switch (value) {
+                case MenuAction.logout:
+                  _provider.logOut();
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                      '/loginRoute/', (route) => false);
+                  break;
+                case MenuAction.about:
+                  break;
+                case MenuAction.addNotes:
+                  Navigator.of(context).pushNamed(
+                    '/addNewNotesRoute/',
+                  );
+                  break;
+              }
+            },
+            itemBuilder: (context) {
+              return const [
+                PopupMenuItem(
+                    value: MenuAction.addNotes, child: Text("Add Notes")),
+                PopupMenuItem(value: MenuAction.logout, child: Text("Logout")),
+                PopupMenuItem(value: MenuAction.about, child: Text("About")),
+              ];
+            },
+          )
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: ListView.builder(
+          itemBuilder: (context, index) {
+            return ExpansionTile(
+              title: Text(
+                "Internet of Things",
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              subtitle: Text("Prof. Arun Prasad"),
+              children: [
+                ListTile(
+                  title: Text("Unit 1"),
+                ),
+                Link(
+                  target: LinkTarget.blank,
+                  uri: Uri.parse(
+                    "https://docs.google.com/forms/d/e/1FAIpQLSckZo9TahMYHXhFt54G9CV0ABdT8jaN3rNEt007BiQPTSpoNQ/viewscore?viewscore=AE0zAgD5Nkbvo40JPYNZZ3Y6WKSqRPZOQc5ltzVYTXeKC1YshbWJA5_sRsn_84e3kHpomqE",
+                  ),
+                  builder: (context, followLink) => GestureDetector(
+                    onTap: followLink,
+                    child: const Text(
+                      'Register Link',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.blue,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            );
+          },
+          itemCount: 5,
+        ),
+      ),
+    );
+  }
+}
+
+Widget _notesCard2() {
+  return Card(
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(10)),
+    ),
+    child: InkWell(
+      onTap: () {},
+      borderRadius: const BorderRadius.all(Radius.circular(20)),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 10),
+        child: SizedBox(
+          width: 50,
+          height: 80,
+          child: const ExpansionTile(
+            title: Text(
+              "Internet of Things",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            subtitle: Text("Prof. Arun Prasad"),
+            children: [
+              Text("Prof. Arun Prasad"),
+              Text("Prof. Arun Prasad"),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+enum MenuAction { logout, about, addNotes }
+
+Widget _notesCard1() => ExpandableNotifier(
+      child: Padding(
+        padding: EdgeInsets.all(8),
+        child: Card(
+          clipBehavior: Clip.antiAlias,
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: ScrollOnExpand(
+                child: ExpandablePanel(
+              theme: ExpandableThemeData(
+                tapBodyToCollapse: true,
+                tapBodyToExpand: true,
+              ),
+              header: Text(
+                "Internet of Things",
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              collapsed: Text(
+                text1,
+                maxLines: 1,
+              ),
+              expanded: Text(text1),
+              builder: (context, collapsed, expanded) => Padding(
+                padding: const EdgeInsets.all(8.0).copyWith(top: 0),
+                child: Expandable(
+                  collapsed: collapsed,
+                  expanded: expanded,
+                ),
+              ),
+            )),
+          ),
+        ),
+      ),
+    );
+
+// Widget _notesCard() {
+//   return Container(
+//     padding: const EdgeInsets.all(16),
+//     child: Card(
+//       shape: const RoundedRectangleBorder(
+//         borderRadius: BorderRadius.all(Radius.circular(10)),
+//       ),
+//       child: InkWell(
+//         onTap: () {},
+//         borderRadius: const BorderRadius.all(Radius.circular(20)),
+//         child: Padding(
+//           padding: const EdgeInsets.only(left: 10),
+//           child: SizedBox(
+//             width: 50,
+//             height: 80,
+//             child: Row(
+//               children: [
+//                 Text(
+//                   "Internet of Things",
+//                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+//                 ),
+//                 IconButton(
+//                     onPressed: () {},
+//                     icon: const Icon(Icons.arrow_downward_rounded))
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     ),
+//   );
+// }
+
+class Item {
+  String expandedValue;
+  String headerValue;
+  bool isExpanded;
+
+  Item(
+      {required this.expandedValue,
+      required this.headerValue,
+      this.isExpanded = false});
+}
+
+List<Item> generateItems(int numberOfItems) {
+  return List.generate(numberOfItems, (index) {
+    return Item(
+      expandedValue: "panel $index",
+      headerValue: "This is item number $index",
+    );
+  });
+}
