@@ -10,10 +10,6 @@ class AttendanceViewForStudent extends StatefulWidget {
       _AttendanceViewForStudentState();
 }
 
-var subname = "Internet of Things";
-var subname1 = "Augmented Reality & Virtual Reality";
-var perce = "15/17";
-
 class _AttendanceViewForStudentState extends State<AttendanceViewForStudent> {
   late final SupabaseAuthProvider _provider;
   dynamic _data;
@@ -21,7 +17,7 @@ class _AttendanceViewForStudentState extends State<AttendanceViewForStudent> {
   @override
   void initState() {
     initialize();
-    _data = _provider.studentAttendanceDeatils("130719205001");
+    _data = _provider.studentAttendanceDeatils("130719205002");
     super.initState();
   }
 

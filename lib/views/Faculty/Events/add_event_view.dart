@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:code/services/auth/supabaseprovider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_image_picker/form_builder_image_picker.dart';
 import 'package:intl/intl.dart';
@@ -153,9 +156,10 @@ class _AddNewEventsViewState extends State<AddNewEventsView> {
                           if (_formKey.currentState?.saveAndValidate() ??
                               false) {
                             final details = _formKey.currentState?.value;
+                            await EasyLoading.show(status: "Submitting");
                             final res = await _provider.addEvent(details);
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(SnackBar(content: Text(res)));
+                            await EasyLoading.showSuccess(res);
+                            await EasyLoading.dismiss();
                             Navigator.of(context).pop();
                           } else {
                             debugPrint(_formKey.currentState?.value.toString());

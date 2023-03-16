@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:ffi';
 
@@ -5,6 +6,7 @@ import 'package:code/services/auth/supabaseprovider.dart';
 import 'package:code/utilities/data_classes.dart';
 import 'package:code/utilities/generic.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class AttendanceView extends StatefulWidget {
   const AttendanceView({super.key});
@@ -20,6 +22,8 @@ class _AttendanceViewState extends State<AttendanceView> {
   late TextEditingController _subjectfullname;
   dynamic _data;
   String? value;
+  Timer? _timer;
+  late double _progress;
 
   @override
   void initState() {
@@ -28,6 +32,15 @@ class _AttendanceViewState extends State<AttendanceView> {
     _subjectname = TextEditingController();
     _subjectId = TextEditingController();
     _subjectfullname = TextEditingController();
+    // EasyLoading.addStatusCallback((status) {
+    //   print('EasyLoading Status $status');
+    //   if (status == EasyLoadingStatus.dismiss) {
+    //     _timer?.cancel();
+    //   }
+    // });
+    EasyLoading.instance
+      ..indicatorType = EasyLoadingIndicatorType.ring
+      ..indicatorColor = Colors.blue;
     super.initState();
   }
 
@@ -149,13 +162,12 @@ class _AttendanceViewState extends State<AttendanceView> {
         onPressed: () async {
           final subject = value!;
           final takenAttendance = _provider.nameList;
+          await EasyLoading.show(status: "Submitting");
           await _provider.addAttendanceRecord(takenAttendance, subject);
+          await EasyLoading.showSuccess('Submitted');
+          await EasyLoading.dismiss();
           final test = overviewCalculation(takenAttendance);
           final absentnamelist = test[2] as List<String>;
-          ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("Submitted Successfully")));
-          await Future.delayed(const Duration(seconds: 2), () {});
-          // ignore: use_build_context_synchronously
           showDialog(
             context: context,
             builder: (BuildContext context) =>

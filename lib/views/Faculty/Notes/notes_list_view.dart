@@ -1,8 +1,8 @@
 import 'package:code/services/auth/supabaseprovider.dart';
+import 'package:code/views/Faculty/Notes/pdf_viewer.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
-import 'package:expansion_tile_card/expansion_tile_card.dart';
-import 'package:url_launcher/link.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class AllNotesListView extends StatefulWidget {
   const AllNotesListView({super.key});
@@ -17,10 +17,13 @@ const text1 =
 
 class _AllNotesListViewState extends State<AllNotesListView> {
   late final SupabaseAuthProvider _provider;
+  dynamic _data;
+  final GlobalKey<SfPdfViewerState> _pdfViewerKey = GlobalKey();
 
   @override
   void initState() {
     initialize();
+    // _data = _provider.getNotes();
     // requestPermission();
     super.initState();
   }
@@ -81,46 +84,56 @@ class _AllNotesListViewState extends State<AllNotesListView> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(12.0),
-        child: ListView.builder(
-          itemBuilder: (context, index) {
-            return ExpansionTile(
-              title: Text(
-                "Internet of Things",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              subtitle: Text("Prof. Arun Prasad"),
-              children: [
-                Column(
-                  children: [
-                    ListView.builder(
-                      itemCount: 5,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      scrollDirection: Axis.vertical,
-                      itemBuilder: (context, index) => ListTile(
-                        title: Link(
-                          target: LinkTarget.self,
-                          uri: Uri.parse(
-                            "https://docs.google.com/forms/d/e/1FAIpQLSckZo9TahMYHXhFt54G9CV0ABdT8jaN3rNEt007BiQPTSpoNQ/viewscore?viewscore=AE0zAgD5Nkbvo40JPYNZZ3Y6WKSqRPZOQc5ltzVYTXeKC1YshbWJA5_sRsn_84e3kHpomqE",
-                          ),
-                          builder: (context, followLink) => GestureDetector(
-                            onTap: followLink,
-                            child: const Text(
-                              'Unit 1',
-                              style: TextStyle(
-                                fontSize: 20,
+        child: FutureBuilder(
+          future: _data,
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.hasData) {
+              return ListView.builder(
+                itemBuilder: (context, index) {
+                  return ExpansionTile(
+                    title: Text(
+                      snapshot.data[index].subjectName,
+                      style: const TextStyle(
+                          fontSize: 24, fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: const Text("Prof. Arun Prasad"),
+                    children: [
+                      Column(
+                        children: [
+                          ListView.builder(
+                            itemCount: 1,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            scrollDirection: Axis.vertical,
+                            itemBuilder: (context, index) => ListTile(
+                              title: TextButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => PdfViwer(
+                                        fileLink: snapshot.data[index].fileLink,
+                                        noteName:
+                                            '${snapshot.data[index].subjectName}-${snapshot.data[index].notesName}',
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Text(snapshot.data[index].notesName),
                               ),
                             ),
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                )
-              ],
-            );
+                          )
+                        ],
+                      )
+                    ],
+                  );
+                },
+                itemCount: snapshot.data?.length,
+              );
+            } else {
+              return const Center(child: CircularProgressIndicator());
+            }
           },
-          itemCount: 5,
         ),
       ),
     );

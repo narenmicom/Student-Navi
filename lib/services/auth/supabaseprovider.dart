@@ -213,7 +213,10 @@ class SupabaseAuthProvider {
 
   Future<List<EventsDetails>> getEventsDetails() async {
     final List<EventsDetails> eventsDetails = [];
-    final res = await Supabase.instance.client.from('events').select('*');
+    final res = await Supabase.instance.client
+        .from('events')
+        .select('*')
+        .order('start_date', ascending: false);
     for (var item in res) {
       final parsed = EventsDetails.fromJson(item);
       eventsDetails.add(parsed);
@@ -244,6 +247,66 @@ class SupabaseAuthProvider {
     } on Exception catch (e) {
       return e.toString();
     }
+  }
+
+  Future<List<NotesDetails>> getNotesIOT() async {
+    final List<NotesDetails> notesDetails = [];
+    final res = await Supabase.instance.client
+        .from('notes')
+        .select('*')
+        .eq('subject_name', 'IOT')
+        .order('subject_name', ascending: true);
+
+    for (var item in res) {
+      final parsed = NotesDetails.fromJson(item);
+      notesDetails.add(parsed);
+    }
+    return notesDetails;
+  }
+
+  Future<List<NotesDetails>> getNotesAI() async {
+    final List<NotesDetails> notesDetails = [];
+    final res = await Supabase.instance.client
+        .from('notes')
+        .select('*')
+        .eq('subject_name', 'AI')
+        .order('subject_name', ascending: true);
+
+    for (var item in res) {
+      final parsed = NotesDetails.fromJson(item);
+      notesDetails.add(parsed);
+    }
+    return notesDetails;
+  }
+
+  Future<List<NotesDetails>> getNotesMLT() async {
+    final List<NotesDetails> notesDetails = [];
+    final res = await Supabase.instance.client
+        .from('notes')
+        .select('*')
+        .eq('subject_name', 'MLT')
+        .order('subject_name', ascending: true);
+
+    for (var item in res) {
+      final parsed = NotesDetails.fromJson(item);
+      notesDetails.add(parsed);
+    }
+    return notesDetails;
+  }
+
+  Future<List<NotesDetails>> getNotesARVR() async {
+    final List<NotesDetails> notesDetails = [];
+    final res = await Supabase.instance.client
+        .from('notes')
+        .select('*')
+        .eq('subject_name', 'ARVR')
+        .order('subject_name', ascending: true);
+
+    for (var item in res) {
+      final parsed = NotesDetails.fromJson(item);
+      notesDetails.add(parsed);
+    }
+    return notesDetails;
   }
 
   Future<User> createUser({

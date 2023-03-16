@@ -1,3 +1,7 @@
+import 'dart:developer';
+
+import 'package:intl/intl.dart';
+
 class NameList {
   final String name;
   final int rollNo;
@@ -74,14 +78,38 @@ class TakenAttendanceFormat {
   // }
 }
 
+class NotesDetails {
+  final String notesName;
+  final String subjectName;
+  final String fileLink;
+
+  NotesDetails({
+    required this.notesName,
+    required this.subjectName,
+    required this.fileLink,
+  });
+
+  factory NotesDetails.fromJson(Map<String, dynamic> data) {
+    final notesName = data['notesname'] as String;
+    final subjectName = data['subject_name'] as String;
+    final fileLink = data['file_link'] as String;
+    return NotesDetails(
+      notesName: notesName,
+      subjectName: subjectName,
+      fileLink: fileLink,
+    );
+  }
+}
+
 class EventsDetails {
   final String ename;
   final String description;
   final String venue;
   final String? registerLink;
   final String posterLink;
-  final String startDate;
-  final String endDate;
+  final String date;
+  final String startTime;
+  final String endTime;
   final String organiser;
 
   EventsDetails({
@@ -90,8 +118,9 @@ class EventsDetails {
     required this.venue,
     this.registerLink,
     required this.posterLink,
-    required this.startDate,
-    required this.endDate,
+    required this.date,
+    required this.startTime,
+    required this.endTime,
     required this.organiser,
   });
 
@@ -101,17 +130,23 @@ class EventsDetails {
     final venue = data['venue'] as String;
     final registerLink = data!['register_link'] as String;
     final posterLink = data['poster_link'] as String;
-    final startDate = data['start_date'] as String;
-    final endDate = data['end_date'] as String;
+    var startDate = DateTime.parse(data['start_date']);
+    // var endDate = data['end_date'] as String;
     final organiser = data['organiser'] as String;
+    final formattedDate = DateFormat('EEEE, MMMM dd, yyyy').format(startDate);
+    final startTime = DateFormat('h:mma').format(startDate);
+    final endTime =
+        DateFormat('h:mma').format(DateTime.parse(data['end_date']));
+    // var strtDate = ;
     return EventsDetails(
       ename: ename,
       description: description,
       venue: venue,
       registerLink: registerLink,
       posterLink: posterLink,
-      startDate: startDate,
-      endDate: endDate,
+      date: formattedDate,
+      startTime: startTime,
+      endTime: endTime,
       organiser: organiser,
     );
   }

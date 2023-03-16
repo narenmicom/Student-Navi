@@ -1,7 +1,8 @@
-import 'dart:developer';
+import 'dart:async';
 
 import 'package:code/services/auth/supabaseprovider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -18,6 +19,8 @@ class _AddNewNotesViewState extends State<AddNewNotesView> {
   bool readOnly = false;
   bool showSegmentedControl = true;
   final _formKey = GlobalKey<FormBuilderState>();
+  Timer? _timer;
+  late double _progress;
   // void _onChanged(dynamic val) => debugPrint(val.toString());
 
   late final SupabaseAuthProvider _provider;
@@ -25,7 +28,14 @@ class _AddNewNotesViewState extends State<AddNewNotesView> {
   @override
   void initState() {
     initialize();
-    // requestPermission();
+    requestPermission();
+    EasyLoading.addStatusCallback((status) {
+      print('EasyLoading Status $status');
+      if (status == EasyLoadingStatus.dismiss) {
+        _timer?.cancel();
+      }
+    });
+    EasyLoading.instance.indicatorColor = Colors.blue;
     super.initState();
   }
 
@@ -41,35 +51,34 @@ class _AddNewNotesViewState extends State<AddNewNotesView> {
     // await requestPermission();
   }
 
-  // Future requestPermission() async {
-  //   PermissionStatus storageStatus = await Permission.storage.request();
+  Future requestPermission() async {
+    PermissionStatus storageStatus = await Permission.storage.request();
 
-  //   if (storageStatus == PermissionStatus.granted) {}
-  //   if (storageStatus == PermissionStatus.denied) {
-  //     ScaffoldMessenger.of(context)
-  //         .showSnackBar(const SnackBar(content: Text("data")));
-  //   }
-  //   if (storageStatus == PermissionStatus.permanentlyDenied) {
-  //     ScaffoldMessenger.of(context)
-  //         .showSnackBar(const SnackBar(content: Text("data")));
-  //     openAppSettings();
-  //   }
+    if (storageStatus == PermissionStatus.granted) {}
+    if (storageStatus == PermissionStatus.denied) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("data")));
+    }
+    if (storageStatus == PermissionStatus.permanentlyDenied) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("data")));
+      openAppSettings();
+    }
 
-  //   PermissionStatus manageExternalStorageStatus =
-  //       await Permission.manageExternalStorage.request();
+    PermissionStatus manageExternalStorageStatus =
+        await Permission.manageExternalStorage.request();
 
-  //   if (manageExternalStorageStatus == PermissionStatus.granted) {}
-  //   if (manageExternalStorageStatus == PermissionStatus.denied) {
-  //     ScaffoldMessenger.of(context)
-  //         .showSnackBar(const SnackBar(content: Text("data")));
-  //   }
-  //   if (manageExternalStorageStatus == PermissionStatus.permanentlyDenied) {
-  //     ScaffoldMessenger.of(context)
-  //         .showSnackBar(const SnackBar(content: Text("data")));
-  //     openAppSettings();
-  //   }
-
-  // }
+    if (manageExternalStorageStatus == PermissionStatus.granted) {}
+    if (manageExternalStorageStatus == PermissionStatus.denied) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("data")));
+    }
+    if (manageExternalStorageStatus == PermissionStatus.permanentlyDenied) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("data")));
+      openAppSettings();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -183,7 +192,11 @@ class _AddNewNotesViewState extends State<AddNewNotesView> {
                           if (_formKey.currentState?.saveAndValidate() ??
                               false) {
                             final details = _formKey.currentState?.value;
+                            _timer?.cancel();
+                            await EasyLoading.show(status: "Submitting");
                             final res = await _provider.addNotes(details);
+                            EasyLoading.showSuccess('Submitted');
+                            await EasyLoading.dismiss();
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(SnackBar(content: Text(res)));
                             Navigator.of(context).pop();
@@ -219,3 +232,22 @@ class _AddNewNotesViewState extends State<AddNewNotesView> {
 }
 
 enum MenuAction { logout, about }
+
+class CustomAnimation extends EasyLoadingAnimation {
+  CustomAnimation();
+
+  @override
+  Widget buildWidget(
+    Widget child,
+    AnimationController controller,
+    AlignmentGeometry alignment,
+  ) {
+    return Opacity(
+      opacity: controller.value,
+      child: RotationTransition(
+        turns: controller,
+        child: child,
+      ),
+    );
+  }
+}

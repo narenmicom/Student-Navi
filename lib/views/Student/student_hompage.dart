@@ -1,4 +1,3 @@
-import 'package:code/views/Faculty/Attendance/attendance_view.dart';
 import 'package:flutter/material.dart';
 
 class StudentHomePage extends StatefulWidget {
@@ -37,17 +36,36 @@ class _StudentHomePageState extends State<StudentHomePage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed('/attendanceRoute/');
-              },
-              child: const Text("Attendance"),
-            )
-          ],
+        child: Center(
+          child: Column(
+            children: [
+              ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/attendanceRoute/');
+                },
+                label: const Text('Attendance Report'),
+                icon: const Icon(Icons.account_box),
+              ),
+              ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/allEventsRoute/');
+                },
+                label: const Text('Events'),
+                icon: const Icon(Icons.calendar_month),
+              ),
+              ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/allSubjectsEventRoute/');
+                },
+                label: const Text('Subjects'),
+                icon: const Icon(Icons.library_books),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
+
+enum MenuAction { logout, about }

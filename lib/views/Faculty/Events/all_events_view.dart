@@ -56,8 +56,6 @@ class _AllEventsViewState extends State<AllEventsView> {
               switch (value) {
                 case MenuAction.logout:
                   _provider.logOut();
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                      '/loginRoute/', (route) => false);
                   break;
                 case MenuAction.about:
                   break;
@@ -113,32 +111,61 @@ class _AllEventsViewState extends State<AllEventsView> {
                             ),
                           ),
                           Container(
-                            height: 125,
-                            width: 200,
+                            constraints: const BoxConstraints(
+                              minWidth: 220,
+                              maxWidth: 270,
+                              minHeight: 120,
+                              maxHeight: 160,
+                            ),
                             padding: const EdgeInsets.only(
-                                left: 1, right: 2, top: 4, bottom: 4),
+                                left: 1, right: 2, top: 5, bottom: 4),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisSize: MainAxisSize.max,
                               children: <Widget>[
-                                Container(
-                                  child: Text(
-                                    snapshot.data[index].ename,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                                Text(
+                                  snapshot.data[index].ename,
+                                  maxLines: 2,
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
                                   ),
                                 ),
-                                Container(
-                                  margin:
-                                      const EdgeInsets.only(top: 2, bottom: 4),
-                                  child: Text(
-                                    snapshot.data[index].venue,
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                    ),
+                                const SizedBox(
+                                  height: 8,
+                                ),
+                                Text(
+                                  snapshot.data[index].date,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
                                   ),
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  '${snapshot.data[index].startTime} - ${snapshot.data[index].endTime}',
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  'By ${snapshot.data[index].organiser}',
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 5,
                                 ),
                                 Expanded(
                                   child: Link(
@@ -150,22 +177,18 @@ class _AllEventsViewState extends State<AllEventsView> {
                                         GestureDetector(
                                       onTap: followLink,
                                       child: const Text(
-                                        'Register Link',
+                                        'LINK',
                                         style: TextStyle(
-                                          fontSize: 20,
+                                          fontSize: 16,
                                           color: Colors.blue,
-                                          decoration: TextDecoration.underline,
                                         ),
                                       ),
                                     ),
                                   ),
-                                )
+                                ),
                               ],
                             ),
                           ),
-                          IconButton(
-                              onPressed: () {},
-                              icon: const Icon(Icons.arrow_downward_rounded))
                         ],
                       ),
                     ),
@@ -173,7 +196,7 @@ class _AllEventsViewState extends State<AllEventsView> {
                 );
               },
               separatorBuilder: (BuildContext context, int index) {
-                return const Divider();
+                return const SizedBox();
               },
             );
           } else {
