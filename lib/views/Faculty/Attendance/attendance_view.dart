@@ -105,6 +105,7 @@ class _AttendanceViewState extends State<AttendanceView> {
                   return Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: DropdownButton<String>(
+                      hint: const Text("Select the Subjects"),
                       isExpanded: true,
                       value: value,
                       icon: const Icon(Icons.arrow_downward),

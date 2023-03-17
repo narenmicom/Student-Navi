@@ -29,13 +29,7 @@ class _AddNewNotesViewState extends State<AddNewNotesView> {
   void initState() {
     initialize();
     requestPermission();
-    EasyLoading.addStatusCallback((status) {
-      print('EasyLoading Status $status');
-      if (status == EasyLoadingStatus.dismiss) {
-        _timer?.cancel();
-      }
-    });
-    EasyLoading.instance.indicatorColor = Colors.blue;
+
     super.initState();
   }
 
@@ -57,11 +51,11 @@ class _AddNewNotesViewState extends State<AddNewNotesView> {
     if (storageStatus == PermissionStatus.granted) {}
     if (storageStatus == PermissionStatus.denied) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("data")));
+          .showSnackBar(const SnackBar(content: Text("Access Denied")));
     }
     if (storageStatus == PermissionStatus.permanentlyDenied) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("data")));
+          .showSnackBar(const SnackBar(content: Text("Access Denied")));
       openAppSettings();
     }
 
@@ -71,11 +65,11 @@ class _AddNewNotesViewState extends State<AddNewNotesView> {
     if (manageExternalStorageStatus == PermissionStatus.granted) {}
     if (manageExternalStorageStatus == PermissionStatus.denied) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("data")));
+          .showSnackBar(const SnackBar(content: Text("Access Denied")));
     }
     if (manageExternalStorageStatus == PermissionStatus.permanentlyDenied) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("data")));
+          .showSnackBar(const SnackBar(content: Text("Access Denied")));
       openAppSettings();
     }
   }

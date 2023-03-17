@@ -102,6 +102,7 @@ class NotesDetails {
 }
 
 class EventsDetails {
+  final int eventId;
   final String ename;
   final String description;
   final String venue;
@@ -113,6 +114,7 @@ class EventsDetails {
   final String organiser;
 
   EventsDetails({
+    required this.eventId,
     required this.ename,
     required this.description,
     required this.venue,
@@ -125,6 +127,7 @@ class EventsDetails {
   });
 
   factory EventsDetails.fromJson(Map<String, dynamic> data) {
+    final eventId = data['eid'] as int;
     final ename = data['ename'] as String;
     final description = data['description'] as String;
     final venue = data['venue'] as String;
@@ -139,6 +142,7 @@ class EventsDetails {
         DateFormat('h:mma').format(DateTime.parse(data['end_date']));
     // var strtDate = ;
     return EventsDetails(
+      eventId: eventId,
       ename: ename,
       description: description,
       venue: venue,

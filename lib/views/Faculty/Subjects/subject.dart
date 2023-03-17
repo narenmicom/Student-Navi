@@ -1,5 +1,5 @@
 import 'package:code/services/auth/supabaseprovider.dart';
-import 'package:code/views/Faculty/Notes/pdf_viewer.dart';
+import 'package:code/views/Faculty/Subjects/pdf_viewer.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 

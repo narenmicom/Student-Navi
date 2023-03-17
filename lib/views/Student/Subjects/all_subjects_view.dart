@@ -1,5 +1,5 @@
 import 'package:code/services/auth/supabaseprovider.dart';
-import 'package:code/views/Faculty/Notes/subject.dart';
+import 'package:code/views/Faculty/Subjects/subject.dart';
 import 'package:flutter/material.dart';
 
 class AllSubjectView extends StatefulWidget {

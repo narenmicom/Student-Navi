@@ -7,10 +7,9 @@ import 'package:code/views/Faculty/Attendance/attendance_report_view.dart';
 import 'package:code/views/Faculty/Attendance/attendance_view.dart';
 import 'package:code/views/Faculty/Events/add_event_view.dart';
 import 'package:code/views/Faculty/Events/all_events_view.dart';
-import 'package:code/views/Faculty/Notes/add_new_notes_view.dart';
-import 'package:code/views/Faculty/Notes/all_subjects_view.dart';
+import 'package:code/views/Faculty/Subjects/add_new_notes_view.dart';
+import 'package:code/views/Faculty/Subjects/all_subjects_view.dart';
 import 'package:code/views/Student/Attendance/attendance_report.dart';
-import 'package:code/views/Student/student_hompage.dart';
 import 'package:code/views/login_view.dart';
 import 'package:code/views/register_view.dart';
 import 'package:flutter/material.dart';
@@ -23,14 +22,14 @@ void main() {
   runApp(const MyApp());
   configLoading();
   //Remove this method to stop OneSignal Debugging
-  OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
+  // OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
 
   OneSignal.shared.setAppId(oneSignalAppID);
 
 // The promptForPushNotificationsWithUserResponse function will show the iOS or Android push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
-  OneSignal.shared.promptUserForPushNotificationPermission().then((accepted) {
-    print("Accepted permission: $accepted");
-  });
+  OneSignal.shared
+      .promptUserForPushNotificationPermission()
+      .then((accepted) {});
 }
 
 class MyApp extends StatelessWidget {
@@ -80,7 +79,7 @@ class HomePage extends StatelessWidget {
       },
       builder: (context, state) {
         if (state is AuthStateLoggedIn) {
-          return const AllEventsView();
+          return const AttendanceView();
         } else if (state is AuthStateLoggedOut) {
           return const LoginView();
         } else if (state is AuthStateRegistering) {

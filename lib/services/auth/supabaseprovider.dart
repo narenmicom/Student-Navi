@@ -38,12 +38,10 @@ class SupabaseAuthProvider {
         .from('student_details')
         .select('*')
         .order('roll_no', ascending: true);
-    log("message");
     for (var item in data) {
       final parsed = NameList.fromJson(item);
       nameList.add(parsed);
     }
-    log("rece");
     return nameList;
   }
 
@@ -154,7 +152,6 @@ class SupabaseAuthProvider {
       var parsed = AttendanceBook.fromJson(item);
       attendanceBookList.add(parsed);
     }
-    log(attendanceBookList[0].presentAbsent.toString());
   }
 
   // void addStudent({
@@ -179,7 +176,6 @@ class SupabaseAuthProvider {
       'subject_name': subjectName,
       'subject_fullname': subjectfullname,
     });
-    log(res.toString());
   }
 
   Future<String> addEvent(Map<String, dynamic>? details) async {
@@ -333,9 +329,19 @@ class SupabaseAuthProvider {
     );
     final Session? session = res.session;
     final User? user = res.user;
-    log(user.toString());
-    log(session!.accessToken.toString());
     return user!;
+  }
+
+  Future<String> deleteEvent(int eid) async {
+    try {
+      await supabase.from('new_event_added').delete().match({'id': eid});
+      await supabase.from('events').delete().match({'eid': eid});
+      return "Deleted";
+    } on PostgrestException catch (e) {
+      return e.toString();
+    } on Exception catch (e) {
+      return e.toString();
+    }
   }
 
   @override
