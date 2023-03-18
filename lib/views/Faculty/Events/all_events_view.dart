@@ -2,7 +2,8 @@ import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:code/services/auth/supabaseprovider.dart';
-import 'package:code/views/Faculty/Attendance/attendance_view.dart';
+import 'package:code/utilities/data_classes.dart';
+import 'package:code/views/Faculty/Attendance/attendance_taking_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:url_launcher/link.dart';
@@ -106,7 +107,7 @@ class _AllEventsViewState extends State<AllEventsView> {
                               context: context,
                               builder: (BuildContext context) =>
                                   _addSubjectPopup(
-                                      context, snapshot.data[index].eventId));
+                                      context, snapshot.data[index]));
                         },
                         borderRadius:
                             const BorderRadius.all(Radius.circular(20)),
@@ -265,7 +266,7 @@ class _AllEventsViewState extends State<AllEventsView> {
     );
   }
 
-  Widget _addSubjectPopup(BuildContext context, int eventId) {
+  Widget _addSubjectPopup(BuildContext context, EventsDetails eventDetails) {
     return AlertDialog(
       content: Column(
         mainAxisSize: MainAxisSize.min,
@@ -282,7 +283,7 @@ class _AllEventsViewState extends State<AllEventsView> {
                 ElevatedButton.icon(
                   onPressed: () async {
                     await EasyLoading.show(status: "Deleting");
-                    final res = await _provider.deleteEvent(eventId);
+                    final res = await _provider.deleteEvent(eventDetails);
                     await EasyLoading.showSuccess(res);
                     // await EasyLoading.dismiss();
                     Navigator.of(context).pop();

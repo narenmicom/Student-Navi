@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:code/constants/database.dart';
 import 'package:code/utilities/data_classes.dart';
 import 'package:code/utilities/generic.dart';
+import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseAuthProvider {
@@ -332,16 +333,48 @@ class SupabaseAuthProvider {
     return user!;
   }
 
-  Future<String> deleteEvent(int eid) async {
+  Future<String> deleteEvent(EventsDetails eventDetails) async {
+    final imageId = eventDetails.posterLink.split(RegExp(r"/"));
+    final List<FileObject> objec = await supabase.storage
+        .from('images')
+        .remove(['events/${imageId.last}']);
+    log(imageId.last);
+    log(objec.toString());
     try {
-      await supabase.from('new_event_added').delete().match({'id': eid});
-      await supabase.from('events').delete().match({'eid': eid});
-      return "Deleted";
+      if (objec.isNotEmpty) {
+        await supabase
+            .from('new_event_added')
+            .delete()
+            .match({'id': eventDetails.eventId});
+        await supabase
+            .from('events')
+            .delete()
+            .match({'eid': eventDetails.eventId});
+        return "Deleted";
+      } else {
+        return "Not Deleted";
+      }
     } on PostgrestException catch (e) {
       return e.toString();
     } on Exception catch (e) {
       return e.toString();
     }
+  }
+
+  Future<List<LectureList>> getAttendanceReport() async {
+    final List<LectureList> lectureDetails = [];
+    final res = await Supabase.instance.client
+        .from('lecture')
+        .select('*')
+        .eq('subject_id', "JIT1601");
+    for (var item in res) {
+      final parsed = LectureList.fromJson(item);
+      lectureDetails.add(parsed);
+    }
+    lectureDetails.forEach((element) {
+      log('${element.lectureDate} ${element.lectureId}');
+    });
+    return lectureDetails;
   }
 
   @override

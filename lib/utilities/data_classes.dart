@@ -156,6 +156,20 @@ class EventsDetails {
   }
 }
 
+class LectureList {
+  final String lectureDate;
+  final String lectureId;
+
+  LectureList({required this.lectureDate, required this.lectureId});
+
+  factory LectureList.fromJson(Map<String, dynamic> data) {
+    final lectureDate =
+        DateFormat('dd/MM/yyyy').format(DateTime.parse(data['lecture_date']));
+    final lectureId = data['lecture_id'] as String;
+    return LectureList(lectureDate: lectureDate, lectureId: lectureId);
+  }
+}
+
 class StudentAttendanceData {
   // int presentCount;
   // int totalCount;

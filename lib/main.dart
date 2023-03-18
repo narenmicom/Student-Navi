@@ -3,7 +3,9 @@ import 'package:code/helpers/loading/loading_screen.dart';
 import 'package:code/services/auth/bloc/auth_bloc.dart';
 import 'package:code/services/auth/bloc/auth_event.dart';
 import 'package:code/services/auth/bloc/auth_state.dart';
+import 'package:code/views/Faculty/Announcement/all_announcement_view.dart';
 import 'package:code/views/Faculty/Attendance/attendance_report_view.dart';
+import 'package:code/views/Faculty/Attendance/attendance_taking_view.dart';
 import 'package:code/views/Faculty/Attendance/attendance_view.dart';
 import 'package:code/views/Faculty/Events/add_event_view.dart';
 import 'package:code/views/Faculty/Events/all_events_view.dart';
@@ -49,6 +51,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/loginRoute/': (context) => const LoginView(),
         '/attendanceRoute/': (context) => const AllEventsView(),
+        '/attendanceTakingRoute/': (context) => const AttendanceTakingView(),
         '/attendanceReportRoute/': (context) => AttendanceReportView(),
         '/addNewEventsRoute/': (context) => const AddNewEventsView(),
         '/addNewNotesRoute/': (context) => const AddNewNotesView(),
@@ -79,7 +82,7 @@ class HomePage extends StatelessWidget {
       },
       builder: (context, state) {
         if (state is AuthStateLoggedIn) {
-          return const AttendanceView();
+          return const AllAnnouncementView();
         } else if (state is AuthStateLoggedOut) {
           return const LoginView();
         } else if (state is AuthStateRegistering) {

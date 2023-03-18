@@ -79,3 +79,5 @@ class _FacultyHomePageState extends State<FacultyHomePage> {
     );
   }
 }
+
+enum MenuAction { logout, about }

@@ -161,11 +161,6 @@ class _AddNewEventsViewState extends State<AddNewEventsView> {
                             await EasyLoading.showSuccess(res);
                             await EasyLoading.dismiss();
                             Navigator.of(context).pop();
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        super.widget));
                           } else {
                             debugPrint(_formKey.currentState?.value.toString());
                             debugPrint('validation failed');

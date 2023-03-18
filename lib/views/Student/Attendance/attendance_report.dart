@@ -1,5 +1,6 @@
 import 'package:code/services/auth/supabaseprovider.dart';
-import 'package:code/views/Faculty/Attendance/attendance_view.dart';
+import 'package:code/views/Faculty/Attendance/attendance_taking_view.dart';
+import 'package:code/views/Student/Events/all_events_view.dart';
 import 'package:flutter/material.dart';
 
 class AttendanceViewForStudent extends StatefulWidget {
@@ -178,3 +179,4 @@ class _AttendanceViewForStudentState extends State<AttendanceViewForStudent> {
 //     ),
 //   );
 // }
+enum MenuAction { logout, about }
