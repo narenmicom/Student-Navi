@@ -136,7 +136,7 @@ class SupabaseAuthProvider {
       final totalcount = totalRes[i]['counts'] as int;
       final present = item['counts'] as int;
       final subjectName = item['subject_fullname'] as String;
-      final percentage = "${((present / totalcount) * 100).round()}%";
+      final percentage = '${((present / totalcount) * 100).round()}';
       final parsed = StudentAttendanceData(
           subjectName: subjectName, percentage: percentage);
       studentAttendanceDeatils.add(parsed);

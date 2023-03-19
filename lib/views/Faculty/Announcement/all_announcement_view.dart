@@ -123,18 +123,27 @@ class _AlAannouncementStateView extends State<AllAnnouncementView> {
                                                 children: [
                                                   Text(
                                                     snapshot.data[index].date,
-                                                    style:
-                                                        TextStyle(fontSize: 18),
+                                                    style: const TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.w800,
+                                                    ),
                                                   ),
                                                   Text(
                                                     snapshot.data[index].month,
-                                                    style:
-                                                        TextStyle(fontSize: 18),
+                                                    style: const TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.w800,
+                                                    ),
                                                   ),
                                                   Text(
                                                     snapshot.data[index].year,
-                                                    style:
-                                                        TextStyle(fontSize: 18),
+                                                    style: const TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.w800,
+                                                    ),
                                                   ),
                                                 ],
                                               ),
@@ -148,8 +157,10 @@ class _AlAannouncementStateView extends State<AllAnnouncementView> {
                                                   maxLines: 2,
                                                   overflow:
                                                       TextOverflow.ellipsis,
-                                                  style:
-                                                      TextStyle(fontSize: 18),
+                                                  style: const TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.w800,
+                                                  ),
                                                 ),
                                               )
                                             ],

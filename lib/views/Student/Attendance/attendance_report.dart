@@ -2,6 +2,7 @@ import 'package:code/services/auth/supabaseprovider.dart';
 import 'package:code/views/Faculty/Attendance/attendance_taking_view.dart';
 import 'package:code/views/Student/Events/all_events_view.dart';
 import 'package:flutter/material.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class AttendanceViewForStudent extends StatefulWidget {
   const AttendanceViewForStudent({super.key});
@@ -18,7 +19,7 @@ class _AttendanceViewForStudentState extends State<AttendanceViewForStudent> {
   @override
   void initState() {
     initialize();
-    _data = _provider.studentAttendanceDeatils("130719205002");
+    _data = _provider.studentAttendanceDeatils("130719205005");
     super.initState();
   }
 
@@ -89,14 +90,17 @@ class _AttendanceViewForStudentState extends State<AttendanceViewForStudent> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  "${snapshot.data[index].percentage}",
-                                  style: TextStyle(fontSize: 18.0),
+                                CircularPercentIndicator(
+                                  radius: 25,
+                                  animation: true,
+                                  animationDuration: 1500,
+                                  progressColor: Colors.blue,
+                                  percent: double.parse(
+                                          snapshot.data[index].percentage) /
+                                      100,
+                                  center: Text(
+                                      '${snapshot.data[index].percentage}%'),
                                 ),
-                                // Text(
-                                //   "${snapshot.data[index].total.toString()}",
-                                //   style: TextStyle(fontSize: 18.0),
-                                // ),
                               ],
                             ),
                           ],
