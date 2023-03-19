@@ -3,6 +3,7 @@ import 'package:code/helpers/loading/loading_screen.dart';
 import 'package:code/services/auth/bloc/auth_bloc.dart';
 import 'package:code/services/auth/bloc/auth_event.dart';
 import 'package:code/services/auth/bloc/auth_state.dart';
+import 'package:code/views/Faculty/Announcement/add_announcement_view.dart';
 import 'package:code/views/Faculty/Announcement/all_announcement_view.dart';
 import 'package:code/views/Faculty/Attendance/attendance_report_view.dart';
 import 'package:code/views/Faculty/Attendance/attendance_taking_view.dart';
@@ -54,6 +55,7 @@ class MyApp extends StatelessWidget {
         '/attendanceTakingRoute/': (context) => const AttendanceTakingView(),
         '/attendanceReportRoute/': (context) => AttendanceReportView(),
         '/addNewEventsRoute/': (context) => const AddNewEventsView(),
+        '/addNewAnnoucementsRoute/': (context) => const AddAnnouncementView(),
         '/addNewNotesRoute/': (context) => const AddNewNotesView(),
         '/allEventsRoute/': (context) => const AllEventsView(),
         '/attendanceViewForStudentsRoute/': (context) =>

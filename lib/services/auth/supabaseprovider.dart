@@ -246,6 +246,47 @@ class SupabaseAuthProvider {
     }
   }
 
+  Future<String> addNewAnnouncement(Map<String, dynamic>? details) async {
+    try {
+      final filePath = File(details?['filename'][0].path);
+      final fileName = File(details?['filename'][0].name);
+
+      final String path = await Supabase.instance.client.storage
+          .from('files')
+          .upload('announcement/${fileName.path}', filePath);
+      log(path);
+      final filepath =
+          "https://zfkofzdawctajysziehp.supabase.co/storage/v1/object/public/$path";
+      if (details != null && path != null) {
+        final res = await Supabase.instance.client.from('announcement').insert({
+          'announcement_name': details['announcementname'],
+          'announcement_type': details['announcementtype'],
+          'issuing_authority': details['issuingAuthority'],
+          'description': details['description'],
+          'attachment_link': filepath,
+        });
+      }
+      return "Submitted";
+    } on PostgrestException catch (e) {
+      return e.toString();
+    } on Exception catch (e) {
+      return e.toString();
+    }
+  }
+
+  Future<List<AnnouncementDetails>> getAnnouncementDetails() async {
+    final List<AnnouncementDetails> announcementDetails = [];
+    final res = await Supabase.instance.client
+        .from('announcement')
+        .select('*')
+        .order('created_at', ascending: false);
+    for (var item in res) {
+      final parsed = AnnouncementDetails.fromJson(item);
+      announcementDetails.add(parsed);
+    }
+    return announcementDetails;
+  }
+
   Future<List<NotesDetails>> getNotesIOT() async {
     final List<NotesDetails> notesDetails = [];
     final res = await Supabase.instance.client

@@ -4,6 +4,8 @@ import 'package:code/services/auth/supabaseprovider.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/link.dart';
 
+import '../../Student/Subjects/pdf_viewer.dart';
+
 class AllAnnouncementView extends StatefulWidget {
   const AllAnnouncementView({super.key});
 
@@ -34,7 +36,7 @@ class _AlAannouncementStateView extends State<AllAnnouncementView> {
   }
 
   getdata() async {
-    return await _provider.getEventsDetails();
+    return await _provider.getAnnouncementDetails();
   }
 
   @override
@@ -46,7 +48,7 @@ class _AlAannouncementStateView extends State<AllAnnouncementView> {
           IconButton(
             onPressed: () {
               Navigator.of(context).pushNamed(
-                '/addNewEventsRoute/',
+                '/addNewAnnoucementsRoute/',
               );
             },
             icon: const Icon(Icons.add),
@@ -58,8 +60,10 @@ class _AlAannouncementStateView extends State<AllAnnouncementView> {
                   _provider.logOut();
                   break;
                 case MenuAction.about:
+                  _provider.getAnnouncementDetails();
                   break;
                 case MenuAction.addAnnouncement:
+                  Navigator.of(context).pushNamed('/addNewAnnoucementsRoute/');
                   break;
               }
             },
@@ -75,99 +79,148 @@ class _AlAannouncementStateView extends State<AllAnnouncementView> {
           )
         ],
       ),
-      body: ListView.separated(
-        itemCount: 5,
-        itemBuilder: (context, index) {
-          return Container(
-            padding:
-                const EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 6),
-            child: Card(
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Column(
-                  children: [
-                    Row(
-                      children: <Widget>[
-                        Container(
-                          width: MediaQuery.of(context).size.width - 30,
-                          padding: const EdgeInsets.only(
-                            left: 20,
-                            top: 10,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "Notices",
-                                    style: TextStyle(fontSize: 18),
-                                  ),
-                                  Text(
-                                    "Jan 11 2023",
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500,
+      body: RefreshIndicator(
+        onRefresh: () => Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (BuildContext context) => super.widget)),
+        child: FutureBuilder(
+          future: _getdata,
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.hasData) {
+              return ListView.separated(
+                itemCount: snapshot.data.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    padding: const EdgeInsets.only(
+                        left: 8, right: 8, top: 8, bottom: 6),
+                    child: Card(
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: <Widget>[
+                                Container(
+                                    width:
+                                        MediaQuery.of(context).size.width - 30,
+                                    padding: const EdgeInsets.only(
+                                      left: 10,
+                                      top: 10,
                                     ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 15,
-                              ),
-                              Row(
-                                children: [
-                                  Flexible(
-                                    child: Text(
-                                      "Health Camp for ENT, Ortho, and General Medicine",
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(fontSize: 18),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 8,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  TextButton.icon(
-                                    onPressed: () {
-                                      log('message');
-                                    },
-                                    icon: Icon(
-                                      color: Colors.white,
-                                      Icons.download,
-                                      size: 24.0,
-                                    ),
-                                    label: Text(
-                                      'Download',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: <Widget>[
+                                        IntrinsicHeight(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              Column(
+                                                children: [
+                                                  Text(
+                                                    snapshot.data[index].date,
+                                                    style:
+                                                        TextStyle(fontSize: 18),
+                                                  ),
+                                                  Text(
+                                                    snapshot.data[index].month,
+                                                    style:
+                                                        TextStyle(fontSize: 18),
+                                                  ),
+                                                  Text(
+                                                    snapshot.data[index].year,
+                                                    style:
+                                                        TextStyle(fontSize: 18),
+                                                  ),
+                                                ],
+                                              ),
+                                              const VerticalDivider(
+                                                thickness: 2,
+                                              ),
+                                              Flexible(
+                                                child: Text(
+                                                  snapshot.data[index]
+                                                      .announcementName,
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style:
+                                                      TextStyle(fontSize: 18),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        const Divider(
+                                          thickness: 2,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Flexible(
+                                              child: Text(
+                                                snapshot.data[index]
+                                                    .issuingAuthority,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(fontSize: 16),
+                                              ),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (_) => PdfViwer(
+                                                      fileLink: snapshot
+                                                          .data[index]
+                                                          .attachmentLink,
+                                                      noteName: snapshot
+                                                          .data[index]
+                                                          .announcementType,
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                              // icon: Icon(
+                                              //   color: Colors.white,
+                                              //   Icons.expand_more,
+                                              //   size: 20.0,
+                                              // ),
+                                              child: const Text(
+                                                'Read More',
+                                                style: TextStyle(
+                                                    color: Colors.blue),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    )),
+                              ],
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        },
-        separatorBuilder: (BuildContext context, int index) {
-          return const SizedBox();
-        },
+                  );
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  return const SizedBox();
+                },
+              );
+            } else {
+              return const Center(child: CircularProgressIndicator());
+            }
+          },
+        ),
       ),
     );
   }

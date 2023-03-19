@@ -101,6 +101,49 @@ class NotesDetails {
   }
 }
 
+class AnnouncementDetails {
+  final String announcementName;
+  final String announcementType;
+  final String issuingAuthority;
+  final String description;
+  final String attachmentLink;
+  final String date;
+  final String month;
+  final String year;
+
+  AnnouncementDetails({
+    required this.announcementName,
+    required this.announcementType,
+    required this.issuingAuthority,
+    required this.description,
+    required this.attachmentLink,
+    required this.date,
+    required this.month,
+    required this.year,
+  });
+
+  factory AnnouncementDetails.fromJson(Map<String, dynamic> data) {
+    final announcementName = data['announcement_name'] as String;
+    final announcementType = data['announcement_type'] as String;
+    final issuingAuthority = data['issuing_authority'] as String;
+    final description = data['description'] ?? 'null';
+    final attachmentLink = data['attachment_link'] as String;
+    final month = DateFormat('MMM').format(DateTime.parse(data['created_at']));
+    final date = DateFormat('dd').format(DateTime.parse(data['created_at']));
+    final year = DateFormat('yy').format(DateTime.parse(data['created_at']));
+    return AnnouncementDetails(
+      announcementName: announcementName,
+      announcementType: announcementType,
+      issuingAuthority: issuingAuthority,
+      description: description,
+      attachmentLink: attachmentLink,
+      date: date,
+      month: month,
+      year: year,
+    );
+  }
+}
+
 class EventsDetails {
   final int eventId;
   final String ename;

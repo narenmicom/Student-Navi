@@ -1,20 +1,23 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:code/services/auth/supabaseprovider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class AddNewNotesView extends StatefulWidget {
-  const AddNewNotesView({super.key});
+class AddAnnouncementView extends StatefulWidget {
+  const AddAnnouncementView({super.key});
 
   @override
-  State<AddNewNotesView> createState() => _AddNewNotesViewState();
+  State<AddAnnouncementView> createState() => AaddAnnouncementStateView();
 }
 
-class _AddNewNotesViewState extends State<AddNewNotesView> {
+class AaddAnnouncementStateView extends State<AddAnnouncementView> {
   bool autoValidate = true;
   bool readOnly = false;
   bool showSegmentedControl = true;
@@ -78,7 +81,7 @@ class _AddNewNotesViewState extends State<AddNewNotesView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Add a Notes"),
+        title: const Text("Add a Announcement"),
         actions: [
           PopupMenuButton<MenuAction>(
             onSelected: (value) async {
@@ -111,44 +114,65 @@ class _AddNewNotesViewState extends State<AddNewNotesView> {
                 child: Column(
                   children: <Widget>[
                     FormBuilderTextField(
-                      name: "notesname",
+                      name: "announcementname",
                       autofocus: true,
                       keyboardType: TextInputType.text,
                       maxLines: 1,
                       decoration:
-                          const InputDecoration(labelText: 'Notes Name'),
+                          const InputDecoration(labelText: 'Announcement Name'),
                       autovalidateMode: AutovalidateMode.onUserInteraction,
-                      validator: (notesname) {
-                        if (notesname?.isEmpty ?? true) {
+                      validator: (announcementname) {
+                        if (announcementname?.isEmpty ?? true) {
                           return 'This field is required.';
                         }
                         return null;
                       },
                     ),
                     FormBuilderDropdown(
-                      name: 'subjectsname',
+                      name: 'announcementtype',
                       decoration:
-                          const InputDecoration(labelText: 'Subject Name'),
+                          const InputDecoration(labelText: 'Announcement Type'),
                       autovalidateMode: AutovalidateMode.onUserInteraction,
-                      validator: (subjectsname) {
-                        if (subjectsname?.isEmpty ?? true) {
+                      validator: (announcementtype) {
+                        if (announcementtype?.isEmpty ?? true) {
                           return 'This field is required.';
                         }
                         return null;
                       },
-                      items: ['IOT', 'AI', 'MLT', 'ARVR'].map((e) {
+                      items: ['Announcement', 'Notice', 'Remainder', 'Circular']
+                          .map((e) {
                         return DropdownMenuItem(
                           child: Text('$e'),
                           value: e,
                         );
                       }).toList(),
                     ),
+                    FormBuilderTextField(
+                      name: "issuingAuthority",
+                      keyboardType: TextInputType.text,
+                      maxLines: 1,
+                      decoration:
+                          const InputDecoration(labelText: 'Issuing Authority'),
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (issuingAuthority) {
+                        if (issuingAuthority?.isEmpty ?? true) {
+                          return 'This field is required.';
+                        }
+                        return null;
+                      },
+                    ),
+                    FormBuilderTextField(
+                      name: "description",
+                      keyboardType: TextInputType.text,
+                      maxLines: 2,
+                      decoration:
+                          const InputDecoration(labelText: 'Description'),
+                    ),
                     FormBuilderFilePicker(
                       name: "filename",
                       decoration: const InputDecoration(labelText: ""),
                       maxFiles: 1,
                       previewImages: true,
-                      onChanged: (val) => print(val),
                       typeSelectors: [
                         TypeSelector(
                           type: FileType.any,
@@ -157,7 +181,7 @@ class _AddNewNotesViewState extends State<AddNewNotesView> {
                               Icon(Icons.add_circle),
                               Padding(
                                 padding: EdgeInsets.only(left: 8.0),
-                                child: Text("Add documents"),
+                                child: Text("Add document"),
                               ),
                             ],
                           ),
@@ -166,12 +190,12 @@ class _AddNewNotesViewState extends State<AddNewNotesView> {
                       onFileLoading: (val) {
                         print(val);
                       },
-                      validator: (filename) {
-                        if (filename?.isEmpty ?? true) {
-                          return 'This field is required.';
-                        }
-                        return null;
-                      },
+                      // validator: (filename) {
+                      //   if (filename?.isEmpty ?? true) {
+                      //     return 'This field is required.';
+                      //   }
+                      //   return null;
+                      // },
                     ),
                   ],
                 ),
@@ -188,7 +212,8 @@ class _AddNewNotesViewState extends State<AddNewNotesView> {
                             final details = _formKey.currentState?.value;
                             _timer?.cancel();
                             await EasyLoading.show(status: "Submitting");
-                            final res = await _provider.addNotes(details);
+                            final res =
+                                await _provider.addNewAnnouncement(details);
                             await EasyLoading.showSuccess(res);
                             await EasyLoading.dismiss();
                             Navigator.of(context).pop();
@@ -224,22 +249,3 @@ class _AddNewNotesViewState extends State<AddNewNotesView> {
 }
 
 enum MenuAction { logout, about }
-
-class CustomAnimation extends EasyLoadingAnimation {
-  CustomAnimation();
-
-  @override
-  Widget buildWidget(
-    Widget child,
-    AnimationController controller,
-    AlignmentGeometry alignment,
-  ) {
-    return Opacity(
-      opacity: controller.value,
-      child: RotationTransition(
-        turns: controller,
-        child: child,
-      ),
-    );
-  }
-}
