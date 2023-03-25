@@ -14,6 +14,7 @@ import 'package:code/views/Faculty/Subjects/add_new_notes_view.dart';
 import 'package:code/views/Faculty/Subjects/all_subjects_view.dart';
 import 'package:code/views/Student/Attendance/attendance_report.dart';
 import 'package:code/views/login_view.dart';
+import 'package:code/views/overal_view.dart';
 import 'package:code/views/register_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -51,13 +52,15 @@ class MyApp extends StatelessWidget {
       builder: EasyLoading.init(),
       routes: {
         '/loginRoute/': (context) => const LoginView(),
-        '/attendanceRoute/': (context) => const AllEventsView(),
+        '/attendanceRoute/': (context) => const AttendanceHomePageView(),
         '/attendanceTakingRoute/': (context) => const AttendanceTakingView(),
         '/attendanceReportRoute/': (context) => AttendanceReportView(),
         '/addNewEventsRoute/': (context) => const AddNewEventsView(),
         '/addNewAnnoucementsRoute/': (context) => const AddAnnouncementView(),
         '/addNewNotesRoute/': (context) => const AddNewNotesView(),
         '/allEventsRoute/': (context) => const AllEventsView(),
+        '/allAnnouncementsRoute/': (context) => const AllAnnouncementView(),
+        '/allSubjectsEventRoute/': (context) => const AllSubjectView(),
         '/attendanceViewForStudentsRoute/': (context) =>
             const AttendanceViewForStudent(),
       },
@@ -84,7 +87,7 @@ class HomePage extends StatelessWidget {
       },
       builder: (context, state) {
         if (state is AuthStateLoggedIn) {
-          return const AttendanceViewForStudent();
+          return const OverAllView();
         } else if (state is AuthStateLoggedOut) {
           return const LoginView();
         } else if (state is AuthStateRegistering) {

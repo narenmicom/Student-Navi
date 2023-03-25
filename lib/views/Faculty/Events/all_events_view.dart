@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:code/services/auth/supabaseprovider.dart';
 import 'package:code/utilities/data_classes.dart';
-import 'package:code/views/Faculty/Attendance/attendance_taking_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:url_launcher/link.dart';

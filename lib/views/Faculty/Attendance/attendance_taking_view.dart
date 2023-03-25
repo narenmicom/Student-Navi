@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
-import 'dart:ffi';
 
 import 'package:code/services/auth/supabaseprovider.dart';
 import 'package:code/utilities/data_classes.dart';
