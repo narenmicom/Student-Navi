@@ -21,6 +21,26 @@ class NameList {
   }
 }
 
+class StudentUserDetails {
+  final String name;
+  final int rollNo;
+  final String profilePicture;
+
+  StudentUserDetails({
+    required this.name,
+    required this.rollNo,
+    required this.profilePicture,
+  });
+
+  factory StudentUserDetails.fromJson(Map<String, dynamic> data) {
+    final name = data['name'] as String;
+    final rollNo = data['roll_no'] as int;
+    final profilePicture = data['profile_picture_link'] as String;
+    return StudentUserDetails(
+        name: name, rollNo: rollNo, profilePicture: profilePicture);
+  }
+}
+
 class Subjects {
   final String subjectId;
   final String subjectName;

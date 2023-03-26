@@ -286,6 +286,10 @@ class _AllEventsViewState extends State<AllEventsView> {
                     await EasyLoading.showSuccess(res);
                     // await EasyLoading.dismiss();
                     Navigator.of(context).pop();
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) => super.widget));
                   },
                   label: const Text('Delete'),
                   icon: const Icon(Icons.delete),

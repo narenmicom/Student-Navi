@@ -33,6 +33,22 @@ class SupabaseAuthProvider {
     }
   }
 
+  Future<StudentUserDetails?> getUserDetails() async {
+    // StudentUserDetails userDetails;
+    final userId = currentUser!.id;
+    try {
+      final res = await Supabase.instance.client
+          .from('student_users_details')
+          .select('*')
+          .eq('id', userId);
+      final parsed = StudentUserDetails.fromJson(res[0]);
+      return parsed;
+    } catch (e) {
+      log(e.toString());
+      return null;
+    }
+  }
+
   Future<List<NameList>> allNameList() async {
     final supabase = Supabase.instance.client;
     final data = await supabase

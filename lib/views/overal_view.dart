@@ -1,7 +1,40 @@
+import 'package:code/services/auth/supabaseprovider.dart';
+import 'package:code/utilities/data_classes.dart';
+import 'package:code/utilities/side_drawer.dart';
 import 'package:flutter/material.dart';
 
-class OverAllView extends StatelessWidget {
+class OverAllView extends StatefulWidget {
   const OverAllView({super.key});
+
+  @override
+  State<OverAllView> createState() => _OverAllViewState();
+}
+
+class _OverAllViewState extends State<OverAllView> {
+  late final SupabaseAuthProvider _provider;
+  late dynamic userDetails;
+
+  @override
+  void initState() {
+    initialize();
+    userDetails = getDetails();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _provider.dispose();
+    super.dispose();
+  }
+
+  void initialize() async {
+    _provider = SupabaseAuthProvider();
+    await _provider.initialize();
+  }
+
+  getDetails() async {
+    return await _provider.getUserDetails();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +50,7 @@ class OverAllView extends StatelessWidget {
                       '/loginRoute/', (route) => false);
                   break;
                 case MenuAction.about:
+                  _provider.getUserDetails();
                   break;
               }
             },
@@ -29,122 +63,105 @@ class OverAllView extends StatelessWidget {
           )
         ],
       ),
-      drawer: Drawer(
-        child: ListView(
-          // Important: Remove any padding from the ListView.
-          padding: EdgeInsets.zero,
-          children: [
-            DrawerHeader(
-              decoration: BoxDecoration(),
-              child: Image.asset(
-                'asset/icons/logo.png',
-                height: 75,
-                width: 75,
+      drawer: drawer(context),
+      body: FutureBuilder(
+        future: userDetails,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            return Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Welcome,',
+                        style: TextStyle(
+                          fontFamily: 'Outfit',
+                          fontSize: 32,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                      Text(
+                        snapshot.data.name,
+                        style: TextStyle(
+                          fontFamily: 'Outfit',
+                          fontSize: 32,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(30),
+                    child: Image.network(
+                      snapshot.data.profilePicture,
+                      height: 75,
+                      width: 75,
+                    ),
+                  ),
+                ],
               ),
-              // Column(
-              //   crossAxisAlignment: CrossAxisAlignment.center,
-              //   children: [
-              //     const Text(
-              //       'Student Navi',
-              //       style: TextStyle(
-              //         fontWeight: FontWeight.bold,
-              //         fontSize: 20,
-              //       ),
-              //     ),
-              //   ],
-              // ),
-            ),
-            ListTile(
-              leading: const Icon(
-                Icons.account_box,
-              ),
-              title: const Text('Attendance'),
-              onTap: () {
-                Navigator.of(context).pushNamed('/attendanceRoute/');
-              },
-            ),
-            ListTile(
-              leading: const Icon(
-                Icons.calendar_month,
-              ),
-              title: const Text('Events'),
-              onTap: () {
-                Navigator.of(context).pushNamed('/allEventsRoute/');
-              },
-            ),
-            ListTile(
-              leading: const Icon(
-                Icons.library_books,
-              ),
-              title: const Text('Subjects'),
-              onTap: () {
-                Navigator.of(context).pushNamed('/allSubjectsEventRoute/');
-              },
-            ),
-            ListTile(
-              leading: const Icon(
-                Icons.newspaper,
-              ),
-              title: const Text('Announcements'),
-              onTap: () {
-                Navigator.of(context).pushNamed('/allAnnouncementsRoute/');
-              },
-            ),
-            // AboutListTile(
-            //   // <-- SEE HERE
-            //   icon: Icon(
-            //     Icons.info,
-            //   ),
-            // ),
-          ],
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Center(
-          child: Column(
-            children: [
-              ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.of(context)
-                      .pushNamed('/attendanceViewForStudentsRoute/');
-                },
-                label: const Text("Student's Attendance Report"),
-                icon: const Icon(Icons.account_box),
-              ),
-              ElevatedButton.icon(
-                onPressed: () {},
-                label: const Text('Attendance'),
-                icon: const Icon(Icons.account_box),
-              ),
-              ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.of(context).pushNamed('/allEventsRoute/');
-                },
-                label: const Text('Events'),
-                icon: const Icon(Icons.calendar_month),
-              ),
-              ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.of(context).pushNamed('/allSubjectsEventRoute/');
-                },
-                label: const Text('Subjects'),
-                icon: const Icon(Icons.library_books),
-              ),
-              ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.of(context).pushNamed('/allAnnouncementsRoute/');
-                },
-                label: const Text('Announcements'),
-                icon: const Icon(Icons.newspaper),
-              ),
-            ],
-          ),
-        ),
+            );
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+        },
       ),
     );
-    ;
   }
 }
 
 enum MenuAction { logout, about }
+
+// Container(
+//                     width: 50,
+//                     height: 50,
+//                     clipBehavior: Clip.antiAlias,
+//                     decoration: BoxDecoration(
+//                       shape: BoxShape.circle,
+//                     ),
+//                     child: Image.asset(
+//                       'asset/icons/logo.png',
+//                       height: 75,
+//                       width: 75,
+//                     ),
+//                   )
+
+// ElevatedButton.icon(
+//                 onPressed: () {
+//                   Navigator.of(context)
+//                       .pushNamed('/attendanceViewForStudentsRoute/');
+//                 },
+//                 label: const Text("Student's Attendance Report"),
+//                 icon: const Icon(Icons.account_box),
+//               ),
+//               ElevatedButton.icon(
+//                 onPressed: () {},
+//                 label: const Text('Attendance'),
+//                 icon: const Icon(Icons.account_box),
+//               ),
+//               ElevatedButton.icon(
+//                 onPressed: () {
+//                   Navigator.of(context).pushNamed('/allEventsRoute/');
+//                 },
+//                 label: const Text('Events'),
+//                 icon: const Icon(Icons.calendar_month),
+//               ),
+//               ElevatedButton.icon(
+//                 onPressed: () {
+//                   Navigator.of(context).pushNamed('/allSubjectsEventRoute/');
+//                 },
+//                 label: const Text('Subjects'),
+//                 icon: const Icon(Icons.library_books),
+//               ),
+//               ElevatedButton.icon(
+//                 onPressed: () {
+//                   Navigator.of(context).pushNamed('/allAnnouncementsRoute/');
+//                 },
+//                 label: const Text('Announcements'),
+//                 icon: const Icon(Icons.newspaper),
+//               ),

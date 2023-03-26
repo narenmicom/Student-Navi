@@ -15,6 +15,7 @@ import 'package:code/views/Faculty/Subjects/all_subjects_view.dart';
 import 'package:code/views/Student/Attendance/attendance_report.dart';
 import 'package:code/views/login_view.dart';
 import 'package:code/views/overal_view.dart';
+import 'package:code/views/profile_view.dart';
 import 'package:code/views/register_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -61,6 +62,8 @@ class MyApp extends StatelessWidget {
         '/allEventsRoute/': (context) => const AllEventsView(),
         '/allAnnouncementsRoute/': (context) => const AllAnnouncementView(),
         '/allSubjectsEventRoute/': (context) => const AllSubjectView(),
+        '/profileRoute/': (context) => const ProfileView(),
+        '/overallRoute/': (context) => const OverAllView(),
         '/attendanceViewForStudentsRoute/': (context) =>
             const AttendanceViewForStudent(),
       },
@@ -140,3 +143,4 @@ void configLoading() {
 //     return LoginView();
 //   }
 // }
+
