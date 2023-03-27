@@ -140,7 +140,14 @@ class SupabaseAuthProvider {
     // readAttendanceFromTable('iot_attendance_2019');
   }
 
-  Future<List<StudentAttendanceData>> studentAttendanceDeatils(rollNo) async {
+  Future<List<StudentAttendanceData>> studentAttendanceDeatils() async {
+    final userId = currentUser!.id;
+    final res = await Supabase.instance.client
+        .from('student_users_details')
+        .select('*')
+        .eq('id', userId);
+    final parsed = StudentUserDetails.fromJson(res[0]);
+    final rollNo = parsed.rollNo;
     final supabase = Supabase.instance.client;
     var i = 0;
     final List<StudentAttendanceData> studentAttendanceDeatils = [];
@@ -217,6 +224,37 @@ class SupabaseAuthProvider {
         });
       }
       return "Submitted";
+    } on PostgrestException catch (e) {
+      return e.toString();
+    } on Exception catch (e) {
+      return e.toString();
+    }
+  }
+
+  Future<String> editProfile(
+      Map<String, dynamic>? details, StudentUserDetails oldDetails) async {
+    try {
+      if (details!['profilepicture'].isEmpty) {
+        log("Add a  Picture");
+        return 'Add a Picture';
+      } else {
+        if (details['profilepicture'][0] == oldDetails.profilePicture) {
+          log("Change Profile Picture");
+          return 'Update the Profile Picture if you want';
+        } else {
+          final avatarFile = File(details['profilepicture'][0].path);
+          final String path = await Supabase.instance.client.storage
+              .from('images')
+              .upload('profile_pictures/${currentUser!.id}.jpg', avatarFile);
+          final imgpath =
+              "https://zfkofzdawctajysziehp.supabase.co/storage/v1/object/public/$path";
+          final res = await Supabase.instance.client
+              .from('student_users_details')
+              .update({'profile_picture_link': imgpath}).match(
+                  {'id': currentUser!.id});
+          return 'Updated';
+        }
+      }
     } on PostgrestException catch (e) {
       return e.toString();
     } on Exception catch (e) {

@@ -46,8 +46,7 @@ class _OverAllViewState extends State<OverAllView> {
             onSelected: (value) async {
               switch (value) {
                 case MenuAction.logout:
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                      '/loginRoute/', (route) => false);
+                  _provider.logOut();
                   break;
                 case MenuAction.about:
                   _provider.getUserDetails();
@@ -70,38 +69,51 @@ class _OverAllViewState extends State<OverAllView> {
           if (snapshot.hasData) {
             return Padding(
               padding: const EdgeInsets.all(20.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: Column(
                 children: [
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        'Welcome,',
-                        style: TextStyle(
-                          fontFamily: 'Outfit',
-                          fontSize: 32,
-                          fontWeight: FontWeight.normal,
-                        ),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Welcome,',
+                            style: TextStyle(
+                              fontFamily: 'Outfit',
+                              fontSize: 32,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                          Text(
+                            snapshot.data.name,
+                            style: const TextStyle(
+                              fontFamily: 'Outfit',
+                              fontSize: 32,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
                       ),
-                      Text(
-                        snapshot.data.name,
-                        style: TextStyle(
-                          fontFamily: 'Outfit',
-                          fontSize: 32,
-                          fontWeight: FontWeight.w600,
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(30),
+                        child: Image.network(
+                          snapshot.data.profilePicture,
+                          height: 75,
+                          width: 75,
                         ),
                       ),
                     ],
                   ),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(30),
-                    child: Image.network(
-                      snapshot.data.profilePicture,
-                      height: 75,
-                      width: 75,
-                    ),
+                  SizedBox(height: 15),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.of(context)
+                          .pushNamed('/attendanceViewForStudentsRoute/');
+                    },
+                    label: const Text("Student's Attendance Report"),
+                    icon: const Icon(Icons.account_box),
                   ),
                 ],
               ),
@@ -131,14 +143,6 @@ enum MenuAction { logout, about }
 //                     ),
 //                   )
 
-// ElevatedButton.icon(
-//                 onPressed: () {
-//                   Navigator.of(context)
-//                       .pushNamed('/attendanceViewForStudentsRoute/');
-//                 },
-//                 label: const Text("Student's Attendance Report"),
-//                 icon: const Icon(Icons.account_box),
-//               ),
 //               ElevatedButton.icon(
 //                 onPressed: () {},
 //                 label: const Text('Attendance'),

@@ -19,7 +19,7 @@ class _AttendanceViewForStudentState extends State<AttendanceViewForStudent> {
   @override
   void initState() {
     initialize();
-    _data = _provider.studentAttendanceDeatils("130719205005");
+    _data = _provider.studentAttendanceDeatils();
     super.initState();
   }
 
