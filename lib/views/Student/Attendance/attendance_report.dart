@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:code/services/auth/supabaseprovider.dart';
 import 'package:code/views/Faculty/Attendance/attendance_taking_view.dart';
 import 'package:code/views/Student/Events/all_events_view.dart';
@@ -15,11 +17,13 @@ class AttendanceViewForStudent extends StatefulWidget {
 class _AttendanceViewForStudentState extends State<AttendanceViewForStudent> {
   late final SupabaseAuthProvider _provider;
   dynamic _data;
+  // dynamic _eachSubjects;
 
   @override
   void initState() {
     initialize();
-    _data = _provider.studentAttendanceDeatils();
+    _data = getDetails();
+
     super.initState();
   }
 
@@ -32,6 +36,10 @@ class _AttendanceViewForStudentState extends State<AttendanceViewForStudent> {
   void initialize() async {
     _provider = SupabaseAuthProvider();
     await _provider.initialize();
+  }
+
+  getDetails() async {
+    return await _provider.studentAttendanceDeatils();
   }
 
   @override
@@ -124,6 +132,70 @@ class _AttendanceViewForStudentState extends State<AttendanceViewForStudent> {
     );
   }
 }
+
+// body: FutureBuilder(
+//         future: _data,
+//         builder: (BuildContext context, AsyncSnapshot snapshot) {
+//           if (snapshot.hasData) {
+//             return ListView.separated(
+//               itemCount: snapshot.data.elementAt(0).length,
+//               itemBuilder: (context, index) {
+//                 // log(snapshot.data.elementAt(1).toString());
+//                 // log(snapshot.data.elementAt(0)[0].subjectName);
+//                 return Padding(
+//                   padding: const EdgeInsets.all(8.0),
+//                   child: Card(
+//                     color: Colors.grey[800],
+//                     child: Padding(
+//                       padding: const EdgeInsets.all(8),
+//                       child: Padding(
+//                         padding: const EdgeInsets.all(15.0),
+//                         child: Row(
+//                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                           children: <Widget>[
+//                             Flexible(
+//                               child: Text(
+//                                 snapshot.data.elementAt(0)[index].subjectName,
+//                                 overflow: TextOverflow.ellipsis,
+//                                 softWrap: false,
+//                                 style: TextStyle(fontSize: 20.0),
+//                               ),
+//                             ),
+//                             Row(
+//                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                               children: [
+//                                 CircularPercentIndicator(
+//                                   radius: 25,
+//                                   animation: true,
+//                                   animationDuration: 1500,
+//                                   progressColor: Colors.blue,
+//                                   percent: double.parse(snapshot.data
+//                                           .elementAt(0)[index]
+//                                           .percentage) /
+//                                       100,
+//                                   center: Text(
+//                                       '${snapshot.data.elementAt(0)[index].percentage}%'),
+//                                 ),
+//                               ],
+//                             ),
+//                           ],
+//                         ),
+//                       ),
+//                     ),
+//                   ),
+//                 );
+//               },
+//               separatorBuilder: (BuildContext context, int index) {
+//                 return const Divider(
+//                   thickness: null,
+//                 );
+//               },
+//             );
+//           } else {
+//             return const Center(child: CircularProgressIndicator());
+//           }
+//         },
+//       ),
 
 // Row(
 //                             mainAxisAlignment: MainAxisAlignment.spaceBetween,

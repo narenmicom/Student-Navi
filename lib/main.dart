@@ -3,6 +3,7 @@ import 'package:code/helpers/loading/loading_screen.dart';
 import 'package:code/services/auth/bloc/auth_bloc.dart';
 import 'package:code/services/auth/bloc/auth_event.dart';
 import 'package:code/services/auth/bloc/auth_state.dart';
+import 'package:code/utilities/settings.dart';
 import 'package:code/views/Faculty/Announcement/add_announcement_view.dart';
 import 'package:code/views/Faculty/Announcement/all_announcement_view.dart';
 import 'package:code/views/Faculty/Attendance/attendance_report_view.dart';
@@ -12,7 +13,9 @@ import 'package:code/views/Faculty/Events/add_event_view.dart';
 import 'package:code/views/Faculty/Events/all_events_view.dart';
 import 'package:code/views/Faculty/Subjects/add_new_notes_view.dart';
 import 'package:code/views/Faculty/Subjects/all_subjects_view.dart';
+import 'package:code/views/Faculty/faculty_hompage.dart';
 import 'package:code/views/Student/Attendance/attendance_report.dart';
+import 'package:code/views/Student/student_hompage.dart';
 import 'package:code/views/login_view.dart';
 import 'package:code/views/overal_view.dart';
 import 'package:code/views/profile_view.dart';
@@ -64,6 +67,7 @@ class MyApp extends StatelessWidget {
         '/allSubjectsEventRoute/': (context) => const AllSubjectView(),
         '/profileRoute/': (context) => const ProfileView(),
         '/overallRoute/': (context) => const OverAllView(),
+        '/settingsView/': (context) => const SettingsView(),
         '/attendanceViewForStudentsRoute/': (context) =>
             const AttendanceViewForStudent(),
       },
@@ -90,7 +94,7 @@ class HomePage extends StatelessWidget {
       },
       builder: (context, state) {
         if (state is AuthStateLoggedIn) {
-          return const OverAllView();
+          return const FacultyHomePage();
         } else if (state is AuthStateLoggedOut) {
           return const LoginView();
         } else if (state is AuthStateRegistering) {

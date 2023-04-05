@@ -4,6 +4,7 @@ import 'package:code/constants/database.dart';
 import 'package:code/utilities/data_classes.dart';
 import 'package:code/utilities/generic.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseAuthProvider {
@@ -33,7 +34,7 @@ class SupabaseAuthProvider {
     }
   }
 
-  Future<StudentUserDetails?> getUserDetails() async {
+  Future<StudentUserDetails?> getStudentUserDetails() async {
     // StudentUserDetails userDetails;
     final userId = currentUser!.id;
     try {
@@ -42,11 +43,49 @@ class SupabaseAuthProvider {
           .select('*')
           .eq('id', userId);
       final parsed = StudentUserDetails.fromJson(res[0]);
+
+      // final eventsRes = await Supabase.instance.client
+      //     .from('events')
+      //     .select()
+      //     .eq('start_date::date', '2023-03-16');
+
       return parsed;
     } catch (e) {
       log(e.toString());
       return null;
     }
+  }
+
+  Future<StaffUserDetails?> getStaffUserDetails() async {
+    // StudentUserDetails userDetails;
+    final userId = currentUser!.id;
+    try {
+      final res = await Supabase.instance.client
+          .from('staff_users_details')
+          .select('*')
+          .eq('id', userId);
+      final parsed = StaffUserDetails.fromJson(res[0]);
+
+      // final eventsRes = await Supabase.instance.client
+      //     .from('events')
+      //     .select()
+      //     .eq('start_date::date', '2023-03-16');
+
+      return parsed;
+    } catch (e) {
+      log(e.toString());
+      return null;
+    }
+  }
+
+  Future<EventsDetails> getTodayEvents() async {
+    final date = getTodaysDate();
+    log(date);
+    final eventsRes = await Supabase.instance.client
+        .rpc('today_event', params: {'today': date});
+
+    final parsed = EventsDetails.fromJson(eventsRes[0]);
+    return parsed;
   }
 
   Future<List<NameList>> allNameList() async {
@@ -150,6 +189,8 @@ class SupabaseAuthProvider {
     final rollNo = parsed.rollNo;
     final supabase = Supabase.instance.client;
     var i = 0;
+    int overall = 0;
+    int overallPresent = 0;
     final List<StudentAttendanceData> studentAttendanceDeatils = [];
     final presentRes =
         await supabase.rpc('present_count', params: {'rollno': rollNo});
@@ -157,7 +198,9 @@ class SupabaseAuthProvider {
         await supabase.rpc('total_count', params: {'rollno': rollNo});
     for (var item in presentRes) {
       final totalcount = totalRes[i]['counts'] as int;
+      overall = overall + totalcount;
       final present = item['counts'] as int;
+      overallPresent = overallPresent + present;
       final subjectName = item['subject_fullname'] as String;
       final percentage = '${((present / totalcount) * 100).round()}';
       final parsed = StudentAttendanceData(
@@ -165,6 +208,7 @@ class SupabaseAuthProvider {
       studentAttendanceDeatils.add(parsed);
       i++;
     }
+
     return studentAttendanceDeatils;
   }
 

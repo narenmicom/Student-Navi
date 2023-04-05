@@ -38,7 +38,7 @@ class _ProfileViewState extends State<ProfileView> {
   }
 
   getDetails() async {
-    return await _provider.getUserDetails();
+    return await _provider.getStudentUserDetails();
   }
 
   @override

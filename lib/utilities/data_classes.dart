@@ -41,6 +41,22 @@ class StudentUserDetails {
   }
 }
 
+class StaffUserDetails {
+  final String name;
+  final String profilePicture;
+
+  StaffUserDetails({
+    required this.name,
+    required this.profilePicture,
+  });
+
+  factory StaffUserDetails.fromJson(Map<String, dynamic> data) {
+    final name = data['name'] as String;
+    final profilePicture = data['profile_picture_link'] as String;
+    return StaffUserDetails(name: name, profilePicture: profilePicture);
+  }
+}
+
 class Subjects {
   final String subjectId;
   final String subjectName;

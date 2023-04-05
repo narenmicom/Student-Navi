@@ -81,10 +81,12 @@ Widget drawer(BuildContext context) => Drawer(
           ),
           ListTile(
             leading: const Icon(
-              Icons.logout,
+              Icons.settings,
             ),
-            title: const Text('Logout'),
-            onTap: () {},
+            title: const Text('Settings'),
+            onTap: () {
+              Navigator.of(context).pushNamed('/settingsView/');
+            },
           ),
           // AboutListTile(
           //   // <-- SEE HERE
