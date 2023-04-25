@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:code/services/auth/supabaseprovider.dart';
 import 'package:code/utilities/side_drawer.dart';
 import 'package:code/views/Faculty/Attendance/attendance_view.dart';
@@ -18,6 +20,7 @@ class _FacultyHomePageState extends State<FacultyHomePage> {
   @override
   void initState() {
     initialize();
+
     userDetails = getDetails();
     todayEventDetails = getTodayEvents();
     super.initState();
@@ -44,6 +47,8 @@ class _FacultyHomePageState extends State<FacultyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    var currentRoute = ModalRoute.of(context)?.settings.name;
+    log(currentRoute!);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Home Page"),

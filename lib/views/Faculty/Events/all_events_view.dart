@@ -42,6 +42,8 @@ class _AllEventsViewState extends State<AllEventsView> {
 
   @override
   Widget build(BuildContext context) {
+    var currentRoute = ModalRoute.of(context)?.settings.name;
+    log(currentRoute!);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Events"),

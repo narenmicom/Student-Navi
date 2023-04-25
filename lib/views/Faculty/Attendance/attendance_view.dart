@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:code/services/auth/supabaseprovider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -33,6 +35,8 @@ class _AttendanceHomePageViewState extends State<AttendanceHomePageView> {
 
   @override
   Widget build(BuildContext context) {
+    var currentRoute = ModalRoute.of(context)?.settings.name;
+    log(currentRoute!);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Attendance"),
