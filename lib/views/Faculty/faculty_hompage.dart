@@ -1,9 +1,12 @@
 import 'dart:developer';
 
+import 'package:code/services/auth/bloc/auth_bloc.dart';
+import 'package:code/services/auth/bloc/auth_event.dart';
 import 'package:code/services/auth/supabaseprovider.dart';
 import 'package:code/utilities/side_drawer.dart';
 import 'package:code/views/Faculty/Attendance/attendance_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class FacultyHomePage extends StatefulWidget {
   const FacultyHomePage({super.key});
@@ -57,7 +60,7 @@ class _FacultyHomePageState extends State<FacultyHomePage> {
             onSelected: (value) async {
               switch (value) {
                 case MenuAction.logout:
-                  _provider.logOut();
+                  context.read<AuthBloc>().add(const AuthEventLogout());
                   break;
                 case MenuAction.about:
                   _provider.getStudentUserDetails();
