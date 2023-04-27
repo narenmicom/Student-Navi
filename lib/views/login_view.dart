@@ -82,7 +82,8 @@ class _LoginViewState extends State<LoginView> {
                   ),
                 ),
               ),
-              TextButton(
+              const SizedBox(height: 25),
+              ElevatedButton(
                 onPressed: () async {
                   final email = _email.text;
                   final password = _password.text;
@@ -95,18 +96,18 @@ class _LoginViewState extends State<LoginView> {
                 },
                 child: const Text("Login"),
               ),
-              TextButton(
-                onPressed: () {},
-                child: const Text('Forgot Password'),
-              ),
-              TextButton(
-                onPressed: () {
-                  context.read<AuthBloc>().add(
-                        const AuthEventShouldRegister(),
-                      );
-                },
-                child: const Text('Not Register yet? Register here'),
-              )
+              // TextButton(
+              //   onPressed: () {},
+              //   child: const Text('Forgot Password'),
+              // ),
+              // TextButton(
+              //   onPressed: () {
+              //     context.read<AuthBloc>().add(
+              //           const AuthEventShouldRegister(),
+              //         );
+              //   },
+              //   child: const Text('Not Register yet? Register here'),
+              // )
             ],
           ),
         ),

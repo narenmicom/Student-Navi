@@ -14,7 +14,7 @@ class AttendanceTakingView extends StatefulWidget {
 }
 
 class _AttendanceTakingViewState extends State<AttendanceTakingView> {
-  late final SupabaseAuthProvider _provider;
+  late final SupabaseProvider _provider;
   late TextEditingController _subjectId;
   late TextEditingController _subjectname;
   late TextEditingController _subjectfullname;
@@ -52,7 +52,7 @@ class _AttendanceTakingViewState extends State<AttendanceTakingView> {
   }
 
   void initialize() async {
-    _provider = SupabaseAuthProvider();
+    _provider = SupabaseProvider();
     await _provider.initialize();
   }
 

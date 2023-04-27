@@ -15,29 +15,18 @@ import 'package:code/views/Faculty/Subjects/add_new_notes_view.dart';
 import 'package:code/views/Faculty/Subjects/all_subjects_view.dart';
 import 'package:code/views/Faculty/faculty_hompage.dart';
 import 'package:code/views/Student/Attendance/attendance_report.dart';
-import 'package:code/views/Student/student_hompage.dart';
 import 'package:code/views/login_view.dart';
-import 'package:code/views/overal_view.dart';
 import 'package:code/views/profile_view.dart';
 import 'package:code/views/register_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
-import 'services/auth/supabaseprovider.dart';
 
 void main() {
   runApp(const MyApp());
   configLoading();
-  //Remove this method to stop OneSignal Debugging
-  // OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
-
-  OneSignal.shared.setAppId(oneSignalAppID);
-
-// The promptForPushNotificationsWithUserResponse function will show the iOS or Android push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
-  OneSignal.shared
-      .promptUserForPushNotificationPermission()
-      .then((accepted) {});
+  oneSignal();
 }
 
 class MyApp extends StatelessWidget {
@@ -50,7 +39,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(brightness: Brightness.dark),
       home: BlocProvider<AuthBloc>(
-        create: (context) => AuthBloc(SupabaseAuthProvider()),
+        create: (context) => AuthBloc(),
         child: const HomePage(),
       ),
       builder: EasyLoading.init(),
@@ -66,7 +55,7 @@ class MyApp extends StatelessWidget {
         '/allAnnouncementsRoute/': (context) => const AllAnnouncementView(),
         '/allSubjectsEventRoute/': (context) => const AllSubjectView(),
         '/profileRoute/': (context) => const ProfileView(),
-        '/overallRoute/': (context) => const OverAllView(),
+        '/facultyHomePage/': (context) => const FacultyHomePage(),
         '/settingsView/': (context) => const SettingsView(),
         '/attendanceViewForStudentsRoute/': (context) =>
             const AttendanceViewForStudent(),
@@ -80,7 +69,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    context.read<AuthBloc>().add(const AuthEventInitialize());
+    context.read<AuthBloc>().add(AuthEventInitialize());
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state.isLoading) {
@@ -94,7 +83,7 @@ class HomePage extends StatelessWidget {
       },
       builder: (context, state) {
         if (state is AuthStateLoggedIn) {
-          return const StudentHomePage();
+          return const FacultyHomePage();
         } else if (state is AuthStateLoggedOut) {
           return const LoginView();
         } else if (state is AuthStateRegistering) {
@@ -118,33 +107,15 @@ void configLoading() {
     ..userInteractions = true;
 }
 
-// class Homepage extends StatefulWidget {
-//   const Homepage({super.key});
+void oneSignal() {
+  //Remove this method to stop OneSignal Debugging
+  // OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
 
-//   @override
-//   State<Homepage> createState() => _HomepageState();
-// }
+  OneSignal.shared.setAppId(oneSignalAppID);
 
-// class _HomepageState extends State<Homepage> {
-//   late final SupabaseAuthProvider _checkup;
-//   late final User? _currentUser;
-
-//   @override
-//   void initState() {
-//     initialize();
-//     super.initState();
-//   }
-
-//   void initialize() async {
-//     _checkup = SupabaseAuthProvider();
-//     await _checkup.initialize();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     _currentUser = _checkup.getCurrentuser();
-//     log(_currentUser.toString());
-//     return LoginView();
-//   }
-// }
-
+// The promptForPushNotificationsWithUserResponse function will show the iOS or Android push notification prompt.
+//We recommend removing the following code and instead using an In-App Message to prompt for notification permission
+  OneSignal.shared
+      .promptUserForPushNotificationPermission()
+      .then((accepted) {});
+}

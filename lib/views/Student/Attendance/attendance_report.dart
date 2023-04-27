@@ -15,7 +15,7 @@ class AttendanceViewForStudent extends StatefulWidget {
 }
 
 class _AttendanceViewForStudentState extends State<AttendanceViewForStudent> {
-  late final SupabaseAuthProvider _provider;
+  late final SupabaseProvider _provider;
   dynamic _data;
   // dynamic _eachSubjects;
 
@@ -34,7 +34,7 @@ class _AttendanceViewForStudentState extends State<AttendanceViewForStudent> {
   }
 
   void initialize() async {
-    _provider = SupabaseAuthProvider();
+    _provider = SupabaseProvider();
     await _provider.initialize();
   }
 

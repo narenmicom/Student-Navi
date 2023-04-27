@@ -12,7 +12,7 @@ class AttendanceReportView extends StatefulWidget {
 }
 
 class _AttendanceReportViewState extends State<AttendanceReportView> {
-  late final SupabaseAuthProvider _provider;
+  late final SupabaseProvider _provider;
   late dynamic _getdata;
 
   @override
@@ -29,7 +29,7 @@ class _AttendanceReportViewState extends State<AttendanceReportView> {
   }
 
   void initialize() async {
-    _provider = SupabaseAuthProvider();
+    _provider = SupabaseProvider();
     await _provider.initialize();
   }
 

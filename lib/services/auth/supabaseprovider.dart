@@ -7,15 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class SupabaseAuthProvider {
+class SupabaseProvider {
   final List<NameList> nameList = [];
 
-  static final SupabaseAuthProvider _shared =
-      SupabaseAuthProvider._sharedInstance();
+  static final SupabaseProvider _shared = SupabaseProvider._sharedInstance();
 
-  SupabaseAuthProvider._sharedInstance();
+  SupabaseProvider._sharedInstance();
 
-  factory SupabaseAuthProvider() => _shared;
+  factory SupabaseProvider() => _shared;
 
   Future<void> initialize() async {
     await Supabase.initialize(
@@ -56,36 +55,33 @@ class SupabaseAuthProvider {
     }
   }
 
-  Future<StaffUserDetails?> getStaffUserDetails() async {
+  Future<StaffUserDetails> getStaffUserDetails() async {
     // StudentUserDetails userDetails;
     final userId = currentUser!.id;
-    try {
-      final res = await Supabase.instance.client
-          .from('staff_users_details')
-          .select('*')
-          .eq('id', userId);
-      final parsed = StaffUserDetails.fromJson(res[0]);
+    final res = await Supabase.instance.client
+        .from('staff_users_details')
+        .select('*')
+        .eq('id', userId);
+    final parsed = StaffUserDetails.fromJson(res[0]);
 
-      // final eventsRes = await Supabase.instance.client
-      //     .from('events')
-      //     .select()
-      //     .eq('start_date::date', '2023-03-16');
+    // final eventsRes = await Supabase.instance.client
+    //     .from('events')
+    //     .select()
+    //     .eq('start_date::date', '2023-03-16');
 
-      return parsed;
-    } catch (e) {
-      log(e.toString());
-      return null;
-    }
+    return parsed;
   }
 
-  Future<EventsDetails> getTodayEvents() async {
-    final date = getTodaysDate();
-    log(date);
-    final eventsRes = await Supabase.instance.client
-        .rpc('today_event', params: {'today': date});
-
-    final parsed = EventsDetails.fromJson(eventsRes[0]);
-    return parsed;
+  Future<EventsDetails?> getTodayEvents() async {
+    try {
+      final date = getTodaysDate();
+      final eventsRes = await Supabase.instance.client
+          .rpc('today_event', params: {'today': date});
+      final parsed = EventsDetails.fromJson(eventsRes[0]);
+      return parsed;
+    } catch (e) {
+      return null;
+    }
   }
 
   Future<List<NameList>> allNameList() async {

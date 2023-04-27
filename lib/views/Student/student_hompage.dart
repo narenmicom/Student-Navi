@@ -13,7 +13,7 @@ class StudentHomePage extends StatefulWidget {
 }
 
 class _StudentHomePageState extends State<StudentHomePage> {
-  late final SupabaseAuthProvider _provider;
+  late final SupabaseProvider _provider;
   late dynamic userDetails;
   late dynamic todayEventDetails;
 
@@ -32,7 +32,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
   }
 
   void initialize() async {
-    _provider = SupabaseAuthProvider();
+    _provider = SupabaseProvider();
     await _provider.initialize();
   }
 
@@ -54,7 +54,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
             onSelected: (value) async {
               switch (value) {
                 case MenuAction.logout:
-                  context.read<AuthBloc>().add(const AuthEventLogout());
+                  context.read<AuthBloc>().add(AuthEventLogout());
                   break;
                 case MenuAction.about:
                   break;

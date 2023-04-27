@@ -11,7 +11,7 @@ class AllEventsView extends StatefulWidget {
 }
 
 class _AllEventsViewState extends State<AllEventsView> {
-  late final SupabaseAuthProvider _provider;
+  late final SupabaseProvider _provider;
   late dynamic _getdata;
 
   @override
@@ -28,7 +28,7 @@ class _AllEventsViewState extends State<AllEventsView> {
   }
 
   void initialize() async {
-    _provider = SupabaseAuthProvider();
+    _provider = SupabaseProvider();
     await _provider.initialize();
   }
 

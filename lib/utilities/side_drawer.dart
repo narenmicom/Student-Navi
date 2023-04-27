@@ -31,7 +31,7 @@ Widget drawer(BuildContext context) => Drawer(
             ),
             title: const Text('Home Page'),
             onTap: () {
-              Navigator.of(context).pushNamed('/overallRoute/');
+              Navigator.of(context).pushNamed('/facultyHomePage/');
             },
           ),
           ListTile(

@@ -15,7 +15,7 @@ class ProfileView extends StatefulWidget {
 }
 
 class _ProfileViewState extends State<ProfileView> {
-  late final SupabaseAuthProvider _provider;
+  late final SupabaseProvider _provider;
   late dynamic userDetails;
   final _formKey = GlobalKey<FormBuilderState>();
 
@@ -33,7 +33,7 @@ class _ProfileViewState extends State<ProfileView> {
   }
 
   void initialize() async {
-    _provider = SupabaseAuthProvider();
+    _provider = SupabaseProvider();
     await _provider.initialize();
   }
 

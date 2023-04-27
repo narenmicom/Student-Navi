@@ -1,13 +1,29 @@
-import 'dart:developer';
-
 import 'package:bloc/bloc.dart';
 import 'package:code/services/auth/bloc/auth_event.dart';
 import 'package:code/services/auth/bloc/auth_state.dart';
 import 'package:code/services/auth/supabaseprovider.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc(SupabaseAuthProvider provider)
-      : super(const AuthStateUninitialized(isLoading: true)) {
+  final provider = SupabaseProvider();
+  AuthBloc() : super(const AuthStateUninitialized(isLoading: true)) {
+    on<AuthEventInitialize>(
+      (event, emit) async {
+        await provider.initialize();
+        var user = provider.currentUser;
+        if (user == null) {
+          emit(const AuthStateLoggedOut(
+            exception: null,
+            isLoading: false,
+          ));
+        } else {
+          emit(AuthStateLoggedIn(
+            user: user,
+            isLoading: false,
+          ));
+        }
+      },
+    );
+
     on<AuthEventShouldRegister>(
       (event, emit) {
         emit(const AuthStateRegistering(
@@ -40,23 +56,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
 
     //initialize
-    on<AuthEventInitialize>(
-      (event, emit) async {
-        await provider.initialize();
-        var user = provider.currentUser;
-        if (user == null) {
-          emit(const AuthStateLoggedOut(
-            exception: null,
-            isLoading: false,
-          ));
-        } else {
-          emit(AuthStateLoggedIn(
-            user: user,
-            isLoading: false,
-          ));
-        }
-      },
-    );
 
     //login
     on<AuthEventLogIn>(

@@ -10,7 +10,7 @@ class IOTView extends StatefulWidget {
 }
 
 class _IOTViewState extends State<IOTView> {
-  late final SupabaseAuthProvider _provider;
+  late final SupabaseProvider _provider;
   dynamic _data;
 
   @override
@@ -28,7 +28,7 @@ class _IOTViewState extends State<IOTView> {
   }
 
   void initialize() async {
-    _provider = SupabaseAuthProvider();
+    _provider = SupabaseProvider();
     await _provider.initialize();
     // await requestPermission();
   }
@@ -95,7 +95,7 @@ class AIView extends StatefulWidget {
 }
 
 class _AIViewState extends State<AIView> {
-  late final SupabaseAuthProvider _provider;
+  late final SupabaseProvider _provider;
   dynamic _data;
 
   @override
@@ -113,7 +113,7 @@ class _AIViewState extends State<AIView> {
   }
 
   void initialize() async {
-    _provider = SupabaseAuthProvider();
+    _provider = SupabaseProvider();
     await _provider.initialize();
     // await requestPermission();
   }
@@ -180,7 +180,7 @@ class MLTView extends StatefulWidget {
 }
 
 class _MLTViewState extends State<MLTView> {
-  late final SupabaseAuthProvider _provider;
+  late final SupabaseProvider _provider;
   dynamic _data;
 
   @override
@@ -198,7 +198,7 @@ class _MLTViewState extends State<MLTView> {
   }
 
   void initialize() async {
-    _provider = SupabaseAuthProvider();
+    _provider = SupabaseProvider();
     await _provider.initialize();
     // await requestPermission();
   }
@@ -265,7 +265,7 @@ class ARVRView extends StatefulWidget {
 }
 
 class _ARVRViewState extends State<ARVRView> {
-  late final SupabaseAuthProvider _provider;
+  late final SupabaseProvider _provider;
   dynamic _data;
 
   @override
@@ -283,7 +283,7 @@ class _ARVRViewState extends State<ARVRView> {
   }
 
   void initialize() async {
-    _provider = SupabaseAuthProvider();
+    _provider = SupabaseProvider();
     await _provider.initialize();
     // await requestPermission();
   }

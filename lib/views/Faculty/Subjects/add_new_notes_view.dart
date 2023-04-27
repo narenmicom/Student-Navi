@@ -23,7 +23,7 @@ class _AddNewNotesViewState extends State<AddNewNotesView> {
   late double _progress;
   // void _onChanged(dynamic val) => debugPrint(val.toString());
 
-  late final SupabaseAuthProvider _provider;
+  late final SupabaseProvider _provider;
 
   @override
   void initState() {
@@ -40,7 +40,7 @@ class _AddNewNotesViewState extends State<AddNewNotesView> {
   }
 
   void initialize() async {
-    _provider = SupabaseAuthProvider();
+    _provider = SupabaseProvider();
     await _provider.initialize();
     // await requestPermission();
   }

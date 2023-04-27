@@ -11,7 +11,7 @@ class RegisterView extends StatefulWidget {
 class _RegisterViewState extends State<RegisterView> {
   late final TextEditingController _email;
   late final TextEditingController _password;
-  late final SupabaseAuthProvider _register;
+  late final SupabaseProvider _register;
   late bool _passwordVisible;
 
   @override
@@ -31,7 +31,7 @@ class _RegisterViewState extends State<RegisterView> {
   }
 
   void initialize() async {
-    _register = SupabaseAuthProvider();
+    _register = SupabaseProvider();
     await _register.initialize();
   }
 

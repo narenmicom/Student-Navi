@@ -13,7 +13,7 @@ class AttendanceHomePageView extends StatefulWidget {
 }
 
 class _AttendanceHomePageViewState extends State<AttendanceHomePageView> {
-  late final SupabaseAuthProvider _provider;
+  late final SupabaseProvider _provider;
 
   @override
   void initState() {
@@ -29,7 +29,7 @@ class _AttendanceHomePageViewState extends State<AttendanceHomePageView> {
   }
 
   void initialize() async {
-    _provider = SupabaseAuthProvider();
+    _provider = SupabaseProvider();
     await _provider.initialize();
   }
 

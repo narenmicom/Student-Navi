@@ -38,17 +38,10 @@ class AuthStateForgotPassword extends AuthState {
 
 class AuthStateLoggedIn extends AuthState {
   final User user;
-  final String? role;
   const AuthStateLoggedIn({
     required this.user,
     required bool isLoading,
-    this.role,
   }) : super(isLoading: isLoading);
-}
-
-class AuthStateNeedsVerification extends AuthState {
-  const AuthStateNeedsVerification({required bool isLoading})
-      : super(isLoading: isLoading);
 }
 
 class AuthStateLoggedOut extends AuthState with EquatableMixin {

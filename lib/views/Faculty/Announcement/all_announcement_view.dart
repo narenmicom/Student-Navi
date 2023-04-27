@@ -14,7 +14,7 @@ class AllAnnouncementView extends StatefulWidget {
 }
 
 class _AlAannouncementStateView extends State<AllAnnouncementView> {
-  late final SupabaseAuthProvider _provider;
+  late final SupabaseProvider _provider;
   late dynamic _getdata;
 
   @override
@@ -31,7 +31,7 @@ class _AlAannouncementStateView extends State<AllAnnouncementView> {
   }
 
   void initialize() async {
-    _provider = SupabaseAuthProvider();
+    _provider = SupabaseProvider();
     await _provider.initialize();
   }
 

@@ -10,7 +10,7 @@ class OverAllView extends StatefulWidget {
 }
 
 class _OverAllViewState extends State<OverAllView> {
-  late final SupabaseAuthProvider _provider;
+  late final SupabaseProvider _provider;
   late dynamic userDetails;
   late dynamic todayEventDetails;
 
@@ -29,7 +29,7 @@ class _OverAllViewState extends State<OverAllView> {
   }
 
   void initialize() async {
-    _provider = SupabaseAuthProvider();
+    _provider = SupabaseProvider();
     await _provider.initialize();
   }
 

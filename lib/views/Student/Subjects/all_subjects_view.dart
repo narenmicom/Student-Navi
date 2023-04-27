@@ -10,7 +10,7 @@ class AllSubjectView extends StatefulWidget {
 }
 
 class _AllSubjectViewState extends State<AllSubjectView> {
-  late final SupabaseAuthProvider _provider;
+  late final SupabaseProvider _provider;
 
   @override
   void initState() {
@@ -26,7 +26,7 @@ class _AllSubjectViewState extends State<AllSubjectView> {
   }
 
   void initialize() async {
-    _provider = SupabaseAuthProvider();
+    _provider = SupabaseProvider();
     await _provider.initialize();
     // await requestPermission();
   }
