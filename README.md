@@ -1,6 +1,5 @@
 <img src="https://raw.githubusercontent.com/narenmicom/Student-Navi/main/.img/logo.png" width="80" height="80" >
 
-![Logo](https://raw.githubusercontent.com/narenmicom/Student-Navi/main/.img/logo.png)
 # Student-Navi
 
 ### Built With
