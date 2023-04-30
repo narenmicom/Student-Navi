@@ -1,10 +1,8 @@
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:code/services/auth/supabaseprovider.dart';
 import 'package:code/utilities/data_classes.dart';
 import 'package:flutter/material.dart';
-
 part 'faculty_home_page_event.dart';
 part 'faculty_home_page_state.dart';
 

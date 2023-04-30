@@ -110,7 +110,7 @@ class EventTile extends StatelessWidget {
                             Expanded(
                               child: Link(
                                 target: LinkTarget.blank,
-                                uri: Uri.parse(''),
+                                uri: Uri.parse(eventsDetails.registerLink),
                                 builder: (context, followLink) =>
                                     GestureDetector(
                                   onTap: followLink,

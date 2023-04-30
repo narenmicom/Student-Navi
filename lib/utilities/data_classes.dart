@@ -185,7 +185,7 @@ class EventsDetails {
   final String ename;
   final String description;
   final String venue;
-  final String? registerLink;
+  final String registerLink;
   final String posterLink;
   final String date;
   final String startTime;
@@ -197,7 +197,7 @@ class EventsDetails {
     required this.ename,
     required this.description,
     required this.venue,
-    this.registerLink,
+    required this.registerLink,
     required this.posterLink,
     required this.date,
     required this.startTime,
