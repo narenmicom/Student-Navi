@@ -1,6 +1,7 @@
 import 'package:code/utilities/data_classes.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:url_launcher/link.dart';
 
 class EventTile extends StatelessWidget {
@@ -20,11 +21,12 @@ class EventTile extends StatelessWidget {
         ),
         child: InkWell(
           onTap: () {
-            // showDialog(
-            //     context: context,
-            //     builder: (BuildContext context) =>
-            //         _addSubjectPopup(
-            //             context, snapshot.data[index]));
+            showDialog(
+                context: context,
+                builder: (BuildContext context) => _addSubjectPopup(
+                      context,
+                      eventsDetails,
+                    ));
           },
           borderRadius: const BorderRadius.all(Radius.circular(20)),
           child: ClipRRect(
@@ -159,4 +161,49 @@ class EventTile extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget _addSubjectPopup(BuildContext context, EventsDetails eventDetails) {
+  return AlertDialog(
+    content: Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Center(
+          child: Column(
+            children: [
+              ElevatedButton.icon(
+                onPressed: () {},
+                label: const Text('Edit'),
+                icon: const Icon(Icons.edit),
+              ),
+              ElevatedButton.icon(
+                onPressed: () async {
+                  // await EasyLoading.show(status: "Deleting");
+                  // final res = await _provider.deleteEvent(eventDetails);
+                  // await EasyLoading.showSuccess(res);
+                  // await EasyLoading.dismiss();
+                  // Navigator.of(context).pop();
+                  // Navigator.pushReplacement(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //         builder: (BuildContext context) => super.widget));
+                },
+                label: const Text('Delete'),
+                icon: const Icon(Icons.delete),
+              ),
+            ],
+          ),
+        )
+      ],
+    ),
+    actions: <Widget>[
+      TextButton(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        child: const Text('Close'),
+      ),
+    ],
+  );
 }

@@ -28,121 +28,130 @@ class _FacultyHomePageState extends State<FacultyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Home Page"),
+        actions: [],
       ),
       drawer: drawer(context),
-      body: BlocConsumer<FacultyHomePageBloc, FacultyHomePageState>(
-        bloc: facultyHomePageBloc,
-        listener: (context, state) {},
-        builder: (context, state) {
-          switch (state.runtimeType) {
-            case FacultyHomePageLoadingState:
-              return const Center(child: CircularProgressIndicator());
-            case FacultyHomePageLoadedState:
-              final data = state as FacultyHomePageLoadedState;
-              return Builder(
-                builder: (context) {
-                  return Padding(
-                    padding:
-                        const EdgeInsets.only(top: 20, left: 12, right: 12),
-                    child: Column(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey[800],
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(20)),
+      body: RefreshIndicator(
+        onRefresh: () => Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (BuildContext context) => super.widget)),
+        child: BlocConsumer<FacultyHomePageBloc, FacultyHomePageState>(
+          bloc: facultyHomePageBloc,
+          listener: (context, state) {},
+          builder: (context, state) {
+            switch (state.runtimeType) {
+              case FacultyHomePageLoadingState:
+                return const Center(child: CircularProgressIndicator());
+              case FacultyHomePageLoadedState:
+                final data = state as FacultyHomePageLoadedState;
+                return Builder(
+                  builder: (context) {
+                    return Padding(
+                      padding:
+                          const EdgeInsets.only(top: 20, left: 12, right: 12),
+                      child: Column(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.grey[800],
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(20)),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        'Welcome,',
+                                        style: TextStyle(
+                                          fontFamily: 'Outfit',
+                                          fontSize: 32,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                      ),
+                                      Text(
+                                        data.staffDetails.name,
+                                        style: const TextStyle(
+                                          fontFamily: 'Outfit',
+                                          fontSize: 32,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(30),
+                                    child: Image.network(
+                                      data.staffDetails.profilePicture,
+                                      height: 75,
+                                      width: 75,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text(
-                                      'Welcome,',
+                          const SizedBox(height: 15),
+                          Column(
+                            children: [
+                              Row(
+                                children: const [
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.only(left: 8, bottom: 4),
+                                    child: Text(
+                                      "Today's Event",
                                       style: TextStyle(
-                                        fontFamily: 'Outfit',
-                                        fontSize: 32,
-                                        fontWeight: FontWeight.normal,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w700,
                                       ),
                                     ),
-                                    Text(
-                                      data.staffDetails.name,
-                                      style: const TextStyle(
-                                        fontFamily: 'Outfit',
-                                        fontSize: 32,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ],
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 5),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[800],
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(20)),
                                 ),
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(30),
-                                  child: Image.network(
-                                    data.staffDetails.profilePicture,
-                                    height: 75,
-                                    width: 75,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      data.todayEventDetails == null
+                                          ? noEventToday()
+                                          : todayEvent(data.todayEventDetails),
+                                    ],
                                   ),
                                 ),
-                              ],
-                            ),
+                              )
+                            ],
                           ),
-                        ),
-                        const SizedBox(height: 15),
-                        Column(
-                          children: [
-                            Row(
-                              children: const [
-                                Padding(
-                                  padding: EdgeInsets.only(left: 8, bottom: 4),
-                                  child: Text(
-                                    "Today's Event",
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 5),
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.grey[800],
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(20)),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    data.todayEventDetails == null
-                                        ? noEventToday()
-                                        : todayEvent(data.todayEventDetails),
-                                  ],
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                        const SizedBox(height: 15),
-                        features(),
-                      ],
-                    ),
-                  );
-                },
-              );
-            case FacultyHomePageErrorState:
-              return const Center(child: Text('Error'));
-            default:
-              return const SizedBox();
-          }
-        },
+                          const SizedBox(height: 15),
+                          features(),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              case FacultyHomePageErrorState:
+                return const Center(child: Text('Error'));
+              default:
+                return const SizedBox();
+            }
+          },
+        ),
       ),
     );
   }

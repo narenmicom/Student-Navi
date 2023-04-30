@@ -1,10 +1,7 @@
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:code/services/auth/supabaseprovider.dart';
 import 'package:code/utilities/data_classes.dart';
-import 'package:equatable/equatable.dart';
-
 part 'events_homepage_event.dart';
 part 'events_homepage_state.dart';
 
